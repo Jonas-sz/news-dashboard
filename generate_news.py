@@ -15,7 +15,7 @@ client = Groq(api_key=os.environ["GROQ_API_KEY"])
 def summarize(title, summary):
     prompt = f"Fasse diese Nachricht in 2 kurzen Sätzen auf Deutsch zusammen:\n\nTitel: {title}\nText: {summary}"
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="openai/gpt-oss-20b",
         messages=[{"role": "user", "content": prompt}],
         max_tokens=150,
     )
