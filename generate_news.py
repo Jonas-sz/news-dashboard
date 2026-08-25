@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-os.makedirs("public", exist_ok=True)
+
 now = datetime.now().strftime("%d.%m.%Y %H:%M")
 
 html = f"""<!DOCTYPE html>
