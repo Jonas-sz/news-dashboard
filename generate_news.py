@@ -25,6 +25,7 @@ def fetch_news():
     articles = []
     for source, url in FEEDS.items():
         feed = feedparser.parse(url)
+        print(f"{source}: {len(feed.entries)} Einträge gefunden, bozo={feed.bozo}")
         for entry in feed.entries[:5]:  # 5 neueste pro Quelle
             summary_text = entry.get("summary", entry.get("title", ""))
             ai_summary = summarize(entry.title, summary_text)
