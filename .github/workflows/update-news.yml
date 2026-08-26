@@ -2,7 +2,7 @@ name: Update News Dashboard
 
 on:
   schedule:
-    - cron: '0 * * * *'  # jede volle Stunde
+    - cron: '30 * * * *'  # jede volle Stunde
   workflow_dispatch:  # erlaubt manuelles Starten über GitHub
 
 permissions:
