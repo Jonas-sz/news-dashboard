@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>News Dashboard</title>
+<title>Jonas' Startseite</title>
 <style>
   :root {
     --bg: #f4f5f7;
@@ -26,7 +26,7 @@
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    max-width: 760px;
+    max-width: 840px;
     margin: 0 auto;
     padding: 32px 20px 60px;
     background: var(--bg);
@@ -37,9 +37,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   h1 { font-size: 1.6em; margin: 0; }
+  .updated { color: var(--text-muted); font-size: 0.85em; margin: 4px 0 20px; }
   .toggle-btn {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -51,21 +52,51 @@
     transition: transform 0.15s ease;
   }
   .toggle-btn:hover { transform: scale(1.08); }
-  .updated { color: var(--text-muted); font-size: 0.9em; margin: 4px 0 20px; }
-  .weather {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+
+  .widgets {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .widget {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 14px 18px;
-    margin-bottom: 24px;
+    padding: 16px 18px;
     box-shadow: var(--shadow);
   }
-  .weather-icon { font-size: 1.8em; }
-  .weather-temp { font-size: 1.3em; font-weight: 600; }
-  .weather-desc { color: var(--text-muted); font-size: 0.9em; }
+  .weather, .countdown { display: flex; align-items: center; gap: 12px; }
+  .weather-icon, .countdown-icon { font-size: 2em; }
+  .weather-temp, .countdown-days { font-size: 1.3em; font-weight: 600; }
+  .widget-sub { color: var(--text-muted); font-size: 0.85em; }
+  .widget-title { font-weight: 600; margin-bottom: 10px; font-size: 0.95em; }
+  .gh-list { list-style: none; margin: 0; padding: 0; font-size: 0.88em; }
+  .gh-list li { padding: 4px 0; color: var(--text-muted); border-top: 1px solid var(--border); }
+  .gh-list li:first-child { border-top: none; }
+  .gh-label { color: var(--accent); font-weight: 500; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 0.88em;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+  .tab-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
   .card {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -76,6 +107,7 @@
     opacity: 0;
     animation: fadeInUp 0.5s ease forwards;
   }
+  .card.hidden { display: none; }
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
@@ -95,90 +127,142 @@
 </head>
 <body data-theme="light">
   <div class="topbar">
-    <h1>📰 News Dashboard</h1>
+    <h1>Guten Morgen, Jonas ☀️</h1>
     <button class="toggle-btn" id="themeToggle" aria-label="Dark Mode umschalten">🌙</button>
   </div>
-  <p class="updated">Zuletzt aktualisiert: 26.08.2026 06:18 Uhr</p>
-  
-        <div class="weather">
+  <p class="updated">Zuletzt aktualisiert: 26.08.2026 06:36 Uhr</p>
+
+  <div class="widgets">
+    
+        <div class="widget weather">
           <span class="weather-icon">☁️</span>
-          <span class="weather-temp">16°C</span>
-          <span class="weather-desc">Bewölkt · Hannover</span>
+          <div>
+            <div class="weather-temp">16°C</div>
+            <div class="widget-sub">Bewölkt · Hannover</div>
+          </div>
         </div>
+    
+        <div class="widget countdown">
+          <span class="countdown-icon">⏳</span>
+          <div>
+            <div class="countdown-days">244 Tage</div>
+            <div class="widget-sub">bis zur IHK-Prüfung</div>
+          </div>
+        </div>
+    
+        <div class="widget github-widget">
+          <div class="widget-title">🐙 GitHub-Aktivität</div>
+          <ul class="gh-list"><li><span class="gh-label">Push zu</span> Jonas-sz/news-dashboard</li></ul>
+        </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-filter="all">Alle</button>
+    <button class="tab-btn" data-filter="allgemein">Allgemein</button>
+    <button class="tab-btn" data-filter="tech">Tech &amp; Cloud</button>
+  </div>
+
   
-        <div class="card" style="animation-delay:0.0s">
+        <div class="card" data-category="allgemein" style="animation-delay:0.0s">
           <div class="source">Tagesschau</div>
           <h3><a href="https://www.tagesschau.de/inland/innenpolitik/kabinettsklausur-112.html" target="_blank" rel="noopener">Bundesregierung berät auf Kabinettsklausur über Klimakrise und Reformen</a></h3>
-          <p>Die Bundesregierung trifft sich in einer Kabinettsklausur, um die Klimakrise und an</p>
+          <p>Die Bundesregierung berät bei der Kabinettsklausur die Klimakrise und Reformvorhaben, wobei Wirtschaft und politische Akteure auf schnelle Maßnahmen drängen. Trotz Uneinigkeit zwischen Union und SPD zum Klimawandel bleiben beide Koalitionspartner optimistisch und kämpferisch.</p>
         </div>
-        <div class="card" style="animation-delay:0.06s">
+        <div class="card" data-category="allgemein" style="animation-delay:0.05s">
           <div class="source">Tagesschau</div>
           <h3><a href="https://www.tagesschau.de/wirtschaft/finanzen/marktberichte/marktbericht-boerse-dax-dow-jones-nvidia-100.html" target="_blank" rel="noopener">Marktbericht: Gute Vorgaben für den DAX</a></h3>
-          <p></p>
+          <p>Der Marktbericht deutet darauf hin, dass die Vorgaben aus den USA und</p>
         </div>
-        <div class="card" style="animation-delay:0.12s">
+        <div class="card" data-category="allgemein" style="animation-delay:0.1s">
           <div class="source">Tagesschau</div>
           <h3><a href="https://www.tagesschau.de/kultur/dolly-parton-nachruf-100.html" target="_blank" rel="noopener">Trauer um Ikone Dolly Parton: "Sie schuf Lieder und Glück"</a></h3>
-          <p>Dolly Parton ist im Alter von 80 Jahren gestorben. Sie war eine unerschrockene Künstlerin, die Generationen begeisterte und sich stets für soziale Anliegen einsetzte.</p>
+          <p>Country-Sängerin Dolly Part</p>
         </div>
-        <div class="card" style="animation-delay:0.18s">
+        <div class="card" data-category="allgemein" style="animation-delay:0.15000000000000002s">
           <div class="source">Tagesschau</div>
           <h3><a href="https://www.tagesschau.de/ausland/europa/russland-ukraine-wirtschaft-100.html" target="_blank" rel="noopener">Russlands Raketen zerstören die ukrainische Wirtschaft</a></h3>
-          <p>Russland richtet mit Raketenangriffen gezielt Stahlwerke und Getreideschiffe an, um die ukrainische Wirtschaft zu zerstören und nutzt dabei seine Luftüberlegenheit aus. Ein zentrales Problem für die Ukraine ist die starke Abhängigkeit vom US‑Flugabwehrsystem „Patriot“.</p>
+          <p></p>
         </div>
-        <div class="card" style="animation-delay:0.24s">
+        <div class="card" data-category="allgemein" style="animation-delay:0.2s">
           <div class="source">Tagesschau</div>
           <h3><a href="https://www.tagesschau.de/wirtschaft/verbraucher/schufa-klage-100.html" target="_blank" rel="noopener">Schattendatenbank: Der Schufa droht eine Sammelklage</a></h3>
-          <p>Die NOYB, eine europäische Datenschutzorganisation, plant eine Sammelklage gegen die Schufa wegen der Schattendatenbank. Ziel ist es, die rechtlichen Konsequenzen dieser Datenbank für die größte deutsche Wirtschaftsauskunftei gerichtlich zu prüfen.</p>
+          <p>NOYB plant eine Sammelklage gegen die Schufa wegen der sogenannten Schattendatenbank. Die gemeinnützige europ</p>
         </div>
-        <div class="card" style="animation-delay:0.3s">
+        <div class="card" data-category="allgemein" style="animation-delay:0.25s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/wirtschaft/2026-08/ifo-exportwirtschaft-umfrage-unternehmen-eu-china" target="_blank" rel="noopener">ifo Institut: Exportstimmung in Deutschland auf höchstem Stand seit Februar 2022</a></h3>
+          <p>Die Exportstimmung in Deutschland ist seit Februar 2022 auf ihrem höchsten Stand. Unternehmen profitieren</p>
+        </div>
+        <div class="card" data-category="allgemein" style="animation-delay:0.30000000000000004s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/datum-fuer-bsw-sonderparteitag-steht" target="_blank" rel="noopener">Clinch mit Bundesspitze: Datum für BSW-Sonderparteitag steht</a></h3>
+          <p></p>
+        </div>
+        <div class="card" data-category="allgemein" style="animation-delay:0.35000000000000003s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/nach-bulldoggen-angriff-anzeige-gegen-halterin" target="_blank" rel="noopener">Seniorin und Hund attackiert: Nach Bulldoggen-Angriff: Anzeige gegen Halterin</a></h3>
+          <p></p>
+        </div>
+        <div class="card" data-category="allgemein" style="animation-delay:0.4s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/feuerwehr-rettet-bewohner-aus-brennendem-wohnhaus" target="_blank" rel="noopener">Treppenhaus voller Rauch: Feuerwehr rettet Bewohner aus brennendem Wohnhaus</a></h3>
+          <p></p>
+        </div>
+        <div class="card" data-category="allgemein" style="animation-delay:0.45s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/marco-reus-zum-dritten-mal-vater-geworden" target="_blank" rel="noopener">Fußball: Marco Reus zum dritten Mal Vater geworden</a></h3>
+          <p></p>
+        </div>
+        <div class="card" data-category="tech" style="animation-delay:0.5s">
+          <div class="source">Heise</div>
+          <h3><a href="https://www.heise.de/news/Linux-7-2-Neuer-Kernel-bringt-Performance-Optimierung-11425914.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Linux 7.2: Neuer Kernel bringt Performance-Optimierung</a></h3>
+          <p></p>
+        </div>
+        <div class="card" data-category="tech" style="animation-delay:0.55s">
           <div class="source">Heise</div>
           <h3><a href="https://www.heise.de/news/Firewalling-jetzt-auch-im-Switch-Ciscos-neues-Release-fuer-Nexus-Smart-Modelle-11425649.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Firewalling jetzt auch im Switch: Ciscos neues Release für Nexus-Smart-Modelle</a></h3>
-          <p>Cisco führt mit einem neuen Release den DPU Security Modus ein. Damit lässt sich Layer‑4‑Stateful‑Firewalling direkt auf den Data Processing Units von Nexus‑Switches betreiben.</p>
+          <p>Cisco hat ein neues Release veröffentlicht, das den DPU Security Mod</p>
         </div>
-        <div class="card" style="animation-delay:0.36s">
+        <div class="card" data-category="tech" style="animation-delay:0.6000000000000001s">
           <div class="source">Heise</div>
           <h3><a href="https://www.heise.de/news/SpaceX-will-100-Milliarden-US-Dollar-in-neuen-Weltraumbahnhof-stecken-11425928.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">SpaceX will 100 Milliarden US-Dollar in neuen Weltraumbahnhof stecken</a></h3>
-          <p>SpaceX</p>
+          <p></p>
         </div>
-        <div class="card" style="animation-delay:0.42s">
+        <div class="card" data-category="tech" style="animation-delay:0.65s">
           <div class="source">Heise</div>
           <h3><a href="https://www.heise.de/news/Lego-Skylines-Paradox-macht-Staedtebau-aus-Klemmbausteinen-11425687.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Gamescom: „Lego Skylines“: Paradox macht Städtebau aus Klemmbausteinen</a></h3>
           <p></p>
         </div>
-        <div class="card" style="animation-delay:0.48s">
+        <div class="card" data-category="tech" style="animation-delay:0.7000000000000001s">
           <div class="source">Heise</div>
           <h3><a href="https://www.heise.de/news/iX-Workshop-Netzwerkarchitekturen-in-Proxmox-aufbauen-verwalten-und-schuetzen-11415574.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">heise-Angebot: iX-Workshop: Netzwerkarchitekturen in Proxmox aufbauen, verwalten und schützen</a></h3>
+          <p>**Titel:** heise-Angebot: iX-Workshop „Netzwerkarchitekturen in Proxmox aufbauen, verwalten und schützen“
+
+**Zusammenfassung:** Der Workshop vermittelt, wie man Proxmox‑VE‑Netzwerke professionell plant, absichert, optimiert und Multi‑Tenant‑Architekturen realisiert, inklusive Performance‑Tuning.</p>
+        </div>
+        <div class="card" data-category="tech" style="animation-delay:0.75s">
+          <div class="source">Golem</div>
+          <h3><a href="https://www.golem.de/news/garmin-fenix-9-pro-bringt-mehr-titan-und-endlich-schnellere-karten-2608-212287.html" target="_blank" rel="noopener">Garmin: Fenix 9 Pro bringt mehr Titan und endlich schnellere Karten</a></h3>
+          <p>Die Garmin</p>
+        </div>
+        <div class="card" data-category="tech" style="animation-delay:0.8s">
+          <div class="source">Golem</div>
+          <h3><a href="https://www.golem.de/news/remaster-upgrade-fuer-the-witcher-3-modernisiert-grafik-kampf-und-monster-2608-212294.html" target="_blank" rel="noopener">Remaster: Upgrade für The Witcher 3 modernisiert Grafik, Kampf und Monster</a></h3>
           <p></p>
         </div>
-        <div class="card" style="animation-delay:0.54s">
-          <div class="source">Heise</div>
-          <h3><a href="https://www.heise.de/news/5000-Fans-feiern-neue-Spiele-bei-Gamescom-Eroeffnungsshow-11425841.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Gamescom: 5000 Fans feiern neue Spiele bei Gamescom-Eröffnungsshow</a></h3>
-          <p></p>
+        <div class="card" data-category="tech" style="animation-delay:0.8500000000000001s">
+          <div class="source">Golem</div>
+          <h3><a href="https://www.golem.de/news/anzeige-microsoft-azure-administrieren-workshop-fuer-admins-2608-212293.html" target="_blank" rel="noopener">Anzeige: Microsoft Azure administrieren: Workshop für Admins</a></h3>
+          <p>Ein Online‑Workshop vermittelt Systemadministratoren praxisnahe Kenntnisse für die Administration</p>
         </div>
-        <div class="card" style="animation-delay:0.6s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/politik/ausland/2026-08/john-ratcliffe-cia-moskau-russland-geheimdienst" target="_blank" rel="noopener">John Ratcliffe: CIA-Chef führt in Moskau Gespräche über Geheimdienstkontakte</a></h3>
-          <p>Russland bestätigte, dass CIA-Chef John Ratcliffe in Moskau war, um über Geheimdienst</p>
+        <div class="card" data-category="tech" style="animation-delay:0.9s">
+          <div class="source">Golem</div>
+          <h3><a href="https://www.golem.de/news/ubisoft-rainbow-six-tactics-bietet-elitensoldaten-rundenstrategie-2608-212246.html" target="_blank" rel="noopener">Ubisoft: Rainbow Six Tactics bietet Elitensoldaten-Rundenstrategie</a></h3>
+          <p>Ubisoft entwickelt ein rundenbasiertes Taktikspiel namens "Rainbow Six Tactics", das die klassische Action-Reihe neu interpretiert. Das Spiel bietet eine Solo-Kampagne sowie ungewöhnliche Echtzeitangriffe als innovative Gameplay-Elemente.</p>
         </div>
-        <div class="card" style="animation-delay:0.6599999999999999s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/luxus-auto-fuer-250-000-euro-in-stuttgart-gestohlen" target="_blank" rel="noopener">Zeugen gesucht: Luxus-Auto für 250.000 Euro in Stuttgart gestohlen</a></h3>
-          <p></p>
-        </div>
-        <div class="card" style="animation-delay:0.72s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/reise-zum-mars-elversberg-freut-sich-auf-die-bundesliga" target="_blank" rel="noopener">Bundesliga-Neuling: «Reise zum Mars»: Elversberg freut sich auf die Bundesliga</a></h3>
-          <p>Um die Nachricht präzise zusammenfassen zu können, benötige ich den vollständigen Text. Bitte teilen Sie mir den gesamten Inhalt mit, damit ich ihn in zwei kurzen Sätzen auf Deutsch zusammenf</p>
-        </div>
-        <div class="card" style="animation-delay:0.78s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/politik/deutschland/2026-08/afd-youtube-streamer-aktivist-mann-bjoern-banane-wahlkampf-sachsen-anhalt-ulrich-siegmund" target="_blank" rel="noopener">AfD und YouTube-Streamer: Der AfD-Pakt mit fragwürdigen Streamern</a></h3>
-          <p></p>
-        </div>
-        <div class="card" style="animation-delay:0.84s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/spaetsommer-verwoehnt-mv-freitag-drohen-gewitter" target="_blank" rel="noopener">Wetter: Spätsommer verwöhnt MV – Freitag drohen Gewitter</a></h3>
+        <div class="card" data-category="tech" style="animation-delay:0.9500000000000001s">
+          <div class="source">Golem</div>
+          <h3><a href="https://www.golem.de/news/telekom-streit-um-inhouse-glasfaser-eigentuemer-hatte-ausbau-bereits-an-pyur-vergeben-2608-212291.html" target="_blank" rel="noopener">Telekom-Streit um Inhouse-Glasfaser: Eigentümer hatte Ausbau bereits an Pyur vergeben</a></h3>
           <p></p>
         </div>
 
@@ -195,6 +279,23 @@
     body.setAttribute('data-theme', isDark ? 'light' : 'dark');
     btn.textContent = isDark ? '🌙' : '☀️';
     localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+
+  const tabs = document.querySelectorAll('.tab-btn');
+  const cards = document.querySelectorAll('.card');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.dataset.filter;
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
   });
 </script>
 </body>
