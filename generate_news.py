@@ -14,7 +14,7 @@ html = f"""<!DOCTYPE html>
 </html>
 """
 
-with open("public/index.html", "w", encoding="utf-8") as f:
+with open("index.html", "w", encoding="utf-8") as f:
     f.write(html)
 
 print("Datei wurde geschrieben!")
