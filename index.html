@@ -4,105 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jonas' Startseite</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>">
 <style>
   :root {
-    --bg: #f4f5f7;
-    --card-bg: #ffffff;
-    --text: #1a1a1a;
-    --text-muted: #6b7280;
-    --accent: #2563eb;
-    --border: #e5e7eb;
+    --bg: #f4f5f7; --card-bg: #ffffff; --text: #1a1a1a; --text-muted: #6b7280;
+    --accent: #2563eb; --border: #e5e7eb;
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
   [data-theme="dark"] {
-    --bg: #0f1115;
-    --card-bg: #1a1d23;
-    --text: #e8e9ec;
-    --text-muted: #9aa0aa;
-    --accent: #60a5fa;
-    --border: #2a2e37;
+    --bg: #0f1115; --card-bg: #1a1d23; --text: #e8e9ec; --text-muted: #9aa0aa;
+    --accent: #60a5fa; --border: #2a2e37;
     --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
   }
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    max-width: 840px;
-    margin: 0 auto;
-    padding: 32px 20px 60px;
-    color: var(--text);
-    background: var(--bg);
+    max-width: 840px; margin: 0 auto; padding: 32px 20px 60px;
+    color: var(--text); background: var(--bg);
     background-image: radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%),
                        radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 40%);
     background-attachment: fixed;
     transition: background 0.25s ease, color 0.25s ease;
   }
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-  }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
   h1 { font-size: 1.6em; margin: 0; }
-  .updated { color: var(--text-muted); font-size: 0.85em; margin: 4px 0 20px; }
+  .updated { color: var(--text-muted); font-size: 0.85em; margin: 4px 0 20px; display: flex; gap: 10px; align-items: center; }
+  .counter { background: var(--card-bg); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; font-size: 0.85em; }
   .toggle-btn {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    width: 40px; height: 40px;
-    cursor: pointer;
-    font-size: 1.1em;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.15s ease;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 999px;
+    width: 40px; height: 40px; cursor: pointer; font-size: 1.1em;
+    display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease;
   }
   .toggle-btn:hover { transform: scale(1.08) rotate(-8deg); }
-
-  .widgets {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
-    margin-bottom: 28px;
-  }
+  .widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 28px; }
   .widget {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px 18px;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px 18px; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .widget:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  }
-
-  .quicklinks {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
-  }
+  .widget:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+  .weather-main { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .forecast { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 10px; }
+  .fc-day { text-align: center; font-size: 0.78em; color: var(--text-muted); }
+  .fc-temps { color: var(--text); font-weight: 500; }
+  .quicklinks { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
   .quicklink {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px 16px;
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.9em;
-    font-weight: 500;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 16px; color: var(--text); text-decoration: none; font-size: 0.9em;
+    font-weight: 500; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
-  .quicklink:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-color: var(--accent);
-  }
+  .quicklink:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: var(--accent); }
   .quicklink-icon { font-size: 1.15em; }
-  .weather, .countdown { display: flex; align-items: center; gap: 12px; }
+  .countdown, .holiday { display: flex; align-items: center; gap: 12px; }
   .weather-icon, .countdown-icon { font-size: 2em; }
   .weather-temp, .countdown-days { font-size: 1.3em; font-weight: 600; }
   .widget-sub { color: var(--text-muted); font-size: 0.85em; }
@@ -111,77 +63,63 @@
   .gh-list li { padding: 4px 0; color: var(--text-muted); border-top: 1px solid var(--border); }
   .gh-list li:first-child { border-top: none; }
   .gh-label { color: var(--accent); font-weight: 500; }
-
-  .tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
   .tab-btn {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 8px 16px;
-    font-size: 0.88em;
-    cursor: pointer;
-    color: var(--text-muted);
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 8px 16px; font-size: 0.88em; cursor: pointer; color: var(--text-muted);
   }
-  .tab-btn.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
-
+  .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
   .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    padding: 18px 22px;
-    margin-bottom: 14px;
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-    opacity: 0;
-    animation: fadeInUp 0.5s ease forwards;
+    background: var(--card-bg); border: 1px solid var(--border); padding: 18px 22px; margin-bottom: 14px;
+    border-radius: 14px; box-shadow: var(--shadow); opacity: 0; animation: fadeInUp 0.5s ease forwards;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
-  .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.1);
-    border-color: var(--accent);
-  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.1); border-color: var(--accent); }
   .card.hidden { display: none; }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .source {
-    color: var(--accent);
-    font-size: 0.78em;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .card-top { display: flex; justify-content: space-between; align-items: center; }
+  .source { color: var(--accent); font-size: 0.78em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+  .badge-new { background: #16a34a; color: white; font-size: 0.7em; font-weight: 700; padding: 2px 8px; border-radius: 999px; letter-spacing: 0.03em; }
   .card h3 { margin: 6px 0 8px; font-size: 1.05em; }
   .card a { color: var(--text); text-decoration: none; }
   .card a:hover { color: var(--accent); }
-  .card p { margin: 0; color: var(--text-muted); line-height: 1.5; font-size: 0.95em; }
+  .card p { margin: 0 0 8px; color: var(--text-muted); line-height: 1.5; font-size: 0.95em; }
+  .read-time { color: var(--text-muted); font-size: 0.78em; }
+  .error-log { margin-top: 24px; font-size: 0.78em; color: var(--text-muted); background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+  .error-log ul { margin: 4px 0 0; padding-left: 18px; }
+  .scroll-top {
+    position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 999px;
+    background: var(--accent); color: white; border: none; cursor: pointer; font-size: 1.2em;
+    display: none; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    transition: opacity 0.2s ease;
+  }
+  .scroll-top.visible { display: flex; }
+  #skeleton {
+    position: fixed; inset: 0; background: var(--bg); z-index: 999;
+    display: flex; align-items: center; justify-content: center; font-size: 2em;
+    transition: opacity 0.3s ease;
+  }
 </style>
 </head>
 <body data-theme="light">
+  <div id="skeleton">📰</div>
   <div class="topbar">
     <h1>Guten Morgen, Jonas ☀️</h1>
     <button class="toggle-btn" id="themeToggle" aria-label="Dark Mode umschalten">🌙</button>
   </div>
-  <p class="updated">Zuletzt aktualisiert: 26.08.2026 08:30 Uhr</p>
+  <p class="updated">Zuletzt aktualisiert: 26.08.2026 08:54 Uhr <span class="counter">20 Artikel</span></p>
 
   <div class="widgets">
     
         <div class="widget weather">
-          <span class="weather-icon">☁️</span>
-          <div>
-            <div class="weather-temp">18°C</div>
-            <div class="widget-sub">Bewölkt · Hannover</div>
+          <div class="weather-main">
+            <span class="weather-icon">☁️</span>
+            <div>
+              <div class="weather-temp">18°C</div>
+              <div class="widget-sub">Bewölkt · Detmold</div>
+            </div>
           </div>
+          <div class="forecast"><div class="fc-day"><div>Do</div><div>⛈️</div><div class="fc-temps">28°/15°</div></div><div class="fc-day"><div>Fr</div><div>🌡️</div><div class="fc-temps">22°/17°</div></div><div class="fc-day"><div>Sa</div><div>🌧️</div><div class="fc-temps">22°/16°</div></div></div>
         </div>
     
         <div class="widget countdown">
@@ -189,6 +127,14 @@
           <div>
             <div class="countdown-days">244 Tage</div>
             <div class="widget-sub">bis zur IHK-Prüfung</div>
+          </div>
+        </div>
+    
+        <div class="widget holiday">
+          <span class="countdown-icon">🎉</span>
+          <div>
+            <div class="countdown-days">38 Tage</div>
+            <div class="widget-sub">bis Tag der Deutschen Einheit (03.10.)</div>
           </div>
         </div>
     
@@ -208,113 +154,200 @@
 
   
         <div class="card" data-category="allgemein" style="animation-delay:0.0s">
-          <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/inland/gesellschaft/protestaktion-magdeburg-migranten-100.html" target="_blank" rel="noopener">Migranten und Forscher warnen vor AfD-Regierung in Sachsen-Anhalt</a></h3>
-          <p>Viele Menschen mit Migrationshintergrund schließen in Magdeburg ihre Geschäfte, um die möglichen Folgen einer AfD-Regierung in Sachsen-Anhalt zu veranschaulichen. Forscher warnen, dass ohne Migration das Wirtschaftswachstum zurückgehen würde.</p>
+          <div class="card-top">
+            <div class="source">Tagesschau</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.tagesschau.de/wirtschaft/finanzen/marktberichte/marktbericht-boerse-dax-dow-jones-nvidia-100.html" target="_blank" rel="noopener">Marktbericht: DAX startet verhalten</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.05s">
-          <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/ausland/asien/brand-kinderkrankenhaus-islamabad-100.html" target="_blank" rel="noopener">Pakistan: Tote bei Brand auf Säuglingsstation in Islamabad</a></h3>
-          <p>In Islamabad explodiert ein Krankenhausfeuer, bei dem mindestens 14 Neugeborene sterben. Erste Hinweise deuten darauf hin, dass ein Defekt an der Klimaanlage den Brand ausgelöst haben könnte.</p>
+          <div class="card-top">
+            <div class="source">Tagesschau</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.tagesschau.de/wissen/klima/waldbraende-zombiefeuer-100.html" target="_blank" rel="noopener">"Zombiefeuer": Wie gefährlich sind diese wiederkehrenden Feuer?</a></h3>
+          <p>Der Artikel erklärt, dass „Zombiefeuer“ Waldbrände sind,</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.1s">
-          <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/inland/innenpolitik/kabinettsklausur-112.html" target="_blank" rel="noopener">Bundesregierung berät auf Kabinettsklausur über Klimakrise und Reformen</a></h3>
-          <p>Die Bundesregierung diskutiert auf Kabinettsklausur über Wirtschaft, Reformen und die Klimakrise, wobei Union und SPD Uneinigkeit zeigen. Trotz Spaltungen bleiben beide Koalitionspartner optimistisch und kämpferisch.</p>
+          <div class="card-top">
+            <div class="source">Tagesschau</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.tagesschau.de/inland/regional/hessen/malaria-am-frankfurter-flughafen-100.html" target="_blank" rel="noopener">"Airport-Malaria": Ein Toter nach Infektion am Frankfurter Flughafen</a></h3>
+          <p>Ein Mitarbeiter des Frankfurter Flughafens ist an einer Malaria-Infektion gestorben, und insgesamt haben sich sechs Personen infiziert. Der sogenannte Airport‑Malaria‑Fall gilt als seltener Übertragungsweg der Krankheit.</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.15000000000000002s">
-          <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/wirtschaft/finanzen/marktberichte/marktbericht-boerse-dax-dow-jones-nvidia-100.html" target="_blank" rel="noopener">Marktbericht: Gute Vorgaben für den DAX</a></h3>
-          <p>Der DAX dürfte dank guter US- und asiatischer Vorgaben einen leicht positiven Start hinnehmen. Die Unsicherheit bleibt jedoch vor allem im Blick auf die Nvidia-Quartalzahlen am Abend.</p>
+          <div class="card-top">
+            <div class="source">Tagesschau</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.tagesschau.de/inland/gesellschaft/protestaktion-magdeburg-migranten-100.html" target="_blank" rel="noopener">Migranten und Forscher warnen vor AfD-Regierung in Sachsen-Anhalt</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.2s">
-          <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/kultur/dolly-parton-nachruf-100.html" target="_blank" rel="noopener">Trauer um Ikone Dolly Parton: "Sie schuf Lieder und Glück"</a></h3>
-          <p>Dolly Parton, 80, ist verstorben. Sie war eine unerschrockene Künstlerin und soziale Befürworterin, die Generationen inspiriert hat.</p>
+          <div class="card-top">
+            <div class="source">Tagesschau</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.tagesschau.de/ausland/asien/brand-kinderkrankenhaus-islamabad-100.html" target="_blank" rel="noopener">Pakistan: Tote bei Brand auf Säuglingsstation in Islamabad</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.25s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/politik/deutschland/2026-08/bedrohungen-angriffe-buergermeister-sachsen-anhalt-mecklenburg-vorpommern-koerber-stiftung" target="_blank" rel="noopener">Kommunen: Sechs von zehn Bürgermeistern in Sachsen-Anhalt erleben Anfeindungen</a></h3>
-          <p>61 % der Bürgermeister in Sachsen‑Anhalt berichten von Beleidigungen, Bedrohungen oder Angriffen. Auch Amt</p>
+          <div class="card-top">
+            <div class="source">Zeit</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.zeit.de/politik/ausland/2026-08/usa-visa-antraege-bewerbungen-botschaften-migration-pause-gxe" target="_blank" rel="noopener">Migration: US-Regierung setzt offenbar Vergabe von Einwanderungsvisa aus</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.30000000000000004s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/saar-landtag-diskutiert-ueber-sicherheit-und-schul-inklusion" target="_blank" rel="noopener">Landtag: Saar-Regierung sieht Zukunft für umweltfreundlichen Stahl</a></h3>
-          <p>Um welches Thema soll ich zusammenfassen? Bitte gib mir den vollständigen Text des Artikels.</p>
+          <div class="card-top">
+            <div class="source">Zeit</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/frueher-als-ueblich-weinlese-an-der-obermosel-startet" target="_blank" rel="noopener">Wein: Früher als üblich: Weinlese an der Obermosel startet</a></h3>
+          <p>Ich kann die Nachricht leider nicht zusammenfassen, weil der eigentliche Text fehlt. Bitte geben Sie den vollständ</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.35000000000000003s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/mann-faehrt-mit-auto-gegen-baum-und-stirbt" target="_blank" rel="noopener">Unfallursache unklar: Mann fährt mit Auto gegen Baum und stirbt</a></h3>
-          <p>Ich brauche den vollständigen Text der Nachricht, um eine präzise Zusammenfassung erstellen zu können. Bitte geben Sie mir den Artikelinhalt an.</p>
+          <div class="card-top">
+            <div class="source">Zeit</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.zeit.de/gesellschaft/2026-08/rechtspopulismus-afd-fpoe-brotaufstrich-alpenpodcast" target="_blank" rel="noopener">Rechtspopulismus: Haider in Magdeburg</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.4s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/wirtschaft/2026-08/isabel-schnabel-ezb-leitzins-inflation" target="_blank" rel="noopener">Inflation: EZB-Direktorin Isabel Schnabel spricht sich für höheren Leitzins aus</a></h3>
-          <p>Die EZB-Direktorin Isabel Schnabel prognostiziert anhaltend hohe Inflation. Sie befürwortet eine mögliche Erhöhung des Leitzinses auf 2,5 %.</p>
+          <div class="card-top">
+            <div class="source">Zeit</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/plaedoyers-in-prozess-um-mord-an-amy-lopez-vor-32-jahren" target="_blank" rel="noopener">Brutaler Mord an US-Touristin: Lebenslang für Amy-Lopez-Mord vor rund 30 Jahren gefordert</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.45s">
-          <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/bundesbank-wero-und-digitalen-euro-verzahnen" target="_blank" rel="noopener">Europäische Bezahlalternativen: Bundesbank: Wero und digitalen Euro verzahnen</a></h3>
-          <p>Ich benötige den vollständigen Text der Nachricht, um sie präz</p>
+          <div class="card-top">
+            <div class="source">Zeit</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.zeit.de/gesellschaft/zeitgeschehen/2026-08/wohnungslosigkeit-alter-bag-wohnungslosenhilfe-bericht" target="_blank" rel="noopener">Wohnungslosenhilfe: Immer mehr ältere Menschen geraten in Wohnungsnot</a></h3>
+          <p>Ältere Menschen geraten vermehrt in Wohnungsnot, so ein Bericht. Hauptursachen sind oft unzureichende Sozialhilfe und zu niedrige Renten.</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.5s">
-          <div class="source">Heise</div>
-          <h3><a href="https://www.heise.de/news/Nvidia-veroeffentlicht-CUDA-Python-1-0-Direkter-Zugriff-auf-CUDA-ohne-C-11426155.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Nvidia veröffentlicht CUDA Python 1.0: Direkter Zugriff auf CUDA ohne C++</a></h3>
+          <div class="card-top">
+            <div class="source">Heise</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.heise.de/hintergrund/Grub-Konfiguration-unter-Linux-optimal-anpassen-11250719.html?wt_mc=rss.red.ho.ho.atom.beitrag_plus.beitrag_plus" target="_blank" rel="noopener">heise+ | Grub-Konfiguration unter Linux optimal anpassen</a></h3>
           <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.55s">
-          <div class="source">Heise</div>
-          <h3><a href="https://www.heise.de/news/c-t-Konferenz-Public-IT-Docker-Workshop-fuer-den-Behoerdenalltag-11425537.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">heise-Angebot: c't-Konferenz Public IT: Docker-Workshop für den Behördenalltag</a></h3>
-          <p></p>
+          <div class="card-top">
+            <div class="source">Heise</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.heise.de/news/Nvidia-veroeffentlicht-CUDA-Python-1-0-Direkter-Zugriff-auf-CUDA-ohne-C-11426155.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Nie wieder PyTorch:  Nvidia veröffentlicht CUDA Python 1.0</a></h3>
+          <p>Nvidia hat das CUDA Python 1.0-Paket veröffentlicht, das direkten Zugriff auf sämtliche CUDA‑Funktionen bietet. Dadurch könnten viele Drittbibliotheken überflüssig werden, weil Entwickler nun direkt auf die GPU-Funktionen zugreifen können.</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.6000000000000001s">
-          <div class="source">Heise</div>
-          <h3><a href="https://www.heise.de/news/Parallels-27-ist-da-Profi-Windows-Apps-laufen-schneller-11425423.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Parallels 27 ist da: Profi-Windows-Apps laufen schneller</a></h3>
+          <div class="card-top">
+            <div class="source">Heise</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.heise.de/news/c-t-Konferenz-Public-IT-Docker-Workshop-fuer-den-Behoerdenalltag-11425537.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">heise-Angebot: c't-Konferenz Public IT: Docker-Workshop für den Behördenalltag</a></h3>
           <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.65s">
-          <div class="source">Heise</div>
-          <h3><a href="https://www.heise.de/news/WordPress-Plug-in-TranslatePress-ermoeglicht-Uebernahme-bei-400-000-Installationen-11426021.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">WordPress-Plug-in TranslatePress ermöglicht Übernahme bei 400.000 Installationen</a></h3>
-          <p>Die Lücke im WordPress‑Plugin TranslatePress gefährdet rund 400.000 Install</p>
+          <div class="card-top">
+            <div class="source">Heise</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.heise.de/news/Parallels-27-ist-da-Profi-Windows-Apps-laufen-schneller-11425423.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Parallels 27 ist da: Profi-Windows-Apps laufen schneller</a></h3>
+          <p>Parallels 27 ist erschienen und bringt Leistungsverbesserungen für Windows‑Apps auf macOS. Gleichzeitig wird der</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.7000000000000001s">
-          <div class="source">Heise</div>
-          <h3><a href="https://www.heise.de/news/Erfolgreicher-Ausseneinsatz-Neue-Antenne-fuer-die-Raumstation-ISS-11426107.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Astronautin und Astronaut bringen neue Antenne an ISS an</a></h3>
-          <p>Astronauten setzten an der ISS eine neue Kommunikationsantenne ein. Die Raumstation, die als Oldtimer gilt, muss regelmäßig gewartet und aktualisiert werden.</p>
+          <div class="card-top">
+            <div class="source">Heise</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.heise.de/news/WordPress-Plug-in-TranslatePress-ermoeglicht-Uebernahme-bei-400-000-Installationen-11426021.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">WordPress-Plug-in TranslatePress ermöglicht Übernahme bei 400.000 Installationen</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.75s">
-          <div class="source">Golem</div>
-          <h3><a href="https://www.golem.de/news/jetzt-updaten-327-sicherheitsluecken-in-google-chrome-gepatcht-2608-212303.html" target="_blank" rel="noopener">Jetzt updaten: 327 Sicherheitslücken in Google Chrome gepatcht</a></h3>
-          <p>Google Chrome hat 327 Sicherheitslücken behoben, die viele Nutzer angreifbar machten. Das aktuelle Update schützt davor und sollte</p>
+          <div class="card-top">
+            <div class="source">Golem</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.golem.de/news/lizenzen-trotz-us-sanktionen-hp-und-huawei-tauschen-patente-um-wi-fi-7-aus-2608-212308.html" target="_blank" rel="noopener">Lizenzen trotz US-Sanktionen: HP und Huawei tauschen Patente um Wi-Fi 7 aus</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.8s">
-          <div class="source">Golem</div>
-          <h3><a href="https://www.golem.de/news/it-sicherheit-fuehrungskraefte-nutzen-ki-trotz-sicherheitsrisiken-2608-212302.html" target="_blank" rel="noopener">IT-Sicherheit: Führungskräfte nutzen KI trotz Sicherheitsrisiken</a></h3>
-          <p></p>
+          <div class="card-top">
+            <div class="source">Golem</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.golem.de/news/anzeige-grosses-display-fuer-apple-carplay-und-android-auto-fuer-prime-mitglieder-jetzt-nur-rund-123-euro-2608-212305.html" target="_blank" rel="noopener">Anzeige: Großes Display für Apple Carplay und Android Auto für Prime-Mitglieder jetzt nur rund ...</a></h3>
+          <p>Das Krunia-Carplay-Display bietet Apple CarPlay, Android Auto und eine Rückfahrkamera im Auto. Für Prime‑Mitglieder gibt es einen erheblichen Rabatt – weitere Infos zu Technik/Hardware und Amazon findest du auf den verlinkten Seiten.</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.8500000000000001s">
-          <div class="source">Golem</div>
-          <h3><a href="https://www.golem.de/news/spielekonsole-lenovos-bios-update-macht-legion-go-kaputt-2608-212301.html" target="_blank" rel="noopener">Spielekonsole: Lenovo bestätigt Bios-Update als Ursache für kaputte Legion Go</a></h3>
-          <p>Lenovo hat eingeräumt, dass ein BIOS‑Update der Legion Go die Konsole beschädigt hat. Trotzdem muss ein Betrachter mehrere Hundert Euro für die Reparatur aufbringen.</p>
+          <div class="card-top">
+            <div class="source">Golem</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.golem.de/news/aufbauspiel-lego-skylines-verbindet-staedtebau-mit-klemmbausteinen-2608-212304.html" target="_blank" rel="noopener">Aufbauspiel: Lego Skylines verbindet Städtebau mit Klemmbausteinen</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.9s">
-          <div class="source">Golem</div>
-          <h3><a href="https://www.golem.de/news/58-personen-verhaftet-grosser-schlag-gegen-onlinebetrug-und-geldwaesche-2608-212299.html" target="_blank" rel="noopener">58 Personen verhaftet: Großer Schlag gegen Onlinebetrug und Geldwäsche</a></h3>
-          <p>St</p>
+          <div class="card-top">
+            <div class="source">Golem</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.golem.de/news/cybersicherheit-in-deutschland-240-seiten-wimmelbild-2608-212277.html" target="_blank" rel="noopener">Cybersicherheit in Deutschland: 240 Seiten Wimmelbild</a></h3>
+          <p>Sven Herpig, Autor einer Datenbank zur staatlichen Cybersicherheitsarchitektur, kritisiert in unserem Newsletter „Chefs von Devs“ die deutschen Sicherheitsbehörden. Der Artikel beleuchtet die Schwächen der deutschen Cyberabwehr und fordert strukturelle Verbesserungen.</p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.9500000000000001s">
-          <div class="source">Golem</div>
-          <h3><a href="https://www.golem.de/news/vorschau-metro-2039-zurueck-in-der-hoelle-unter-moskau-2608-212170.html" target="_blank" rel="noopener">Vorschau Metro 2039: Zurück in der Hölle unter Moskau</a></h3>
-          <p>Golem hat Metro 2039 mehrere Stunden gespielt und findet die Rückkehr nach Moskau düster und brutal, aber gleichzeitig vielversprechend. Der Titel verspricht ein intensives und düsteres Spielerlebnis in der</p>
+          <div class="card-top">
+            <div class="source">Golem</div>
+            <span class="badge-new">NEU</span>
+          </div>
+          <h3><a href="https://www.golem.de/news/jetzt-updaten-327-sicherheitsluecken-in-google-chrome-gepatcht-2608-212303.html" target="_blank" rel="noopener">Jetzt updaten: 327 Sicherheitslücken in Google Chrome gepatcht</a></h3>
+          <p></p>
+          <div class="read-time">⏱️ ~1 Min Lesezeit</div>
         </div>
 
+  
+
+  <button class="scroll-top" id="scrollTop" aria-label="Nach oben">⬆️</button>
+
 <script>
+  window.addEventListener('load', () => {
+    const sk = document.getElementById('skeleton');
+    setTimeout(() => { sk.style.opacity = '0'; setTimeout(() => sk.remove(), 300); }, 150);
+  });
+
   const btn = document.getElementById('themeToggle');
   const body = document.body;
-  const saved = localStorage.getItem('theme');
-  if (saved === 'dark') {
-    body.setAttribute('data-theme', 'dark');
-    btn.textContent = '☀️';
+  if (localStorage.getItem('theme') === 'dark') {
+    body.setAttribute('data-theme', 'dark'); btn.textContent = '☀️';
   }
   btn.addEventListener('click', () => {
     const isDark = body.getAttribute('data-theme') === 'dark';
@@ -331,14 +364,16 @@
       tab.classList.add('active');
       const filter = tab.dataset.filter;
       cards.forEach(card => {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
+        card.classList.toggle('hidden', !(filter === 'all' || card.dataset.category === filter));
       });
     });
   });
+
+  const scrollBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    scrollBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+  scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 </script>
 </body>
 </html>
