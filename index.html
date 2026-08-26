@@ -2,91 +2,200 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>News Dashboard</title>
 <style>
-body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
-h1 { color: #222; }
-.card { background: white; padding: 15px 20px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-.source { color: #888; font-size: 0.85em; text-transform: uppercase; }
-a { color: #0066cc; text-decoration: none; }
+  :root {
+    --bg: #f4f5f7;
+    --card-bg: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --accent: #2563eb;
+    --border: #e5e7eb;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+  [data-theme="dark"] {
+    --bg: #0f1115;
+    --card-bg: #1a1d23;
+    --text: #e8e9ec;
+    --text-muted: #9aa0aa;
+    --accent: #60a5fa;
+    --border: #2a2e37;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  h1 { font-size: 1.6em; margin: 0; }
+  .toggle-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    width: 40px; height: 40px;
+    cursor: pointer;
+    font-size: 1.1em;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s ease;
+  }
+  .toggle-btn:hover { transform: scale(1.08); }
+  .updated { color: var(--text-muted); font-size: 0.9em; margin: 4px 0 20px; }
+  .weather {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .weather-icon { font-size: 1.8em; }
+  .weather-temp { font-size: 1.3em; font-weight: 600; }
+  .weather-desc { color: var(--text-muted); font-size: 0.9em; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .source {
+    color: var(--accent);
+    font-size: 0.78em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .card h3 { margin: 6px 0 8px; font-size: 1.05em; }
+  .card a { color: var(--text); text-decoration: none; }
+  .card a:hover { color: var(--accent); }
+  .card p { margin: 0; color: var(--text-muted); line-height: 1.5; font-size: 0.95em; }
 </style>
 </head>
-<body>
-<h1>📰 News Dashboard</h1>
-<p>Zuletzt aktualisiert: 26.08.2026 06:13 Uhr</p>
-<div class="card">
-<div class="source">Tagesschau</div>
-<h3><a href="https://www.tagesschau.de/inland/innenpolitik/kabinettsklausur-112.html" target="_blank">Bundesregierung berät auf Kabinettsklausur über Klimakrise und Reformen</a></h3>
-<p>Auf der Kabinet</p>
-</div>
-<div class="card">
-<div class="source">Tagesschau</div>
-<h3><a href="https://www.tagesschau.de/wirtschaft/finanzen/marktberichte/marktbericht-boerse-dax-dow-jones-nvidia-100.html" target="_blank">Marktbericht: Gute Vorgaben für den DAX</a></h3>
-<p>Die Vorgaben aus den USA und Asien wirken positiv für den DAX</p>
-</div>
-<div class="card">
-<div class="source">Tagesschau</div>
-<h3><a href="https://www.tagesschau.de/kultur/dolly-parton-nachruf-100.html" target="_blank">Trauer um Ikone Dolly Parton: "Sie schuf Lieder und Glück"</a></h3>
-<p>Dolly Parton, die 80-jährige Country-Sängerin, ist im Alter von 80 Jahren verstorben. Bekannt für ihren eisernen Willen, ihre inspirierende Musik und ihr Engagement für soziale Belange, hat sie Generationen begeistert.</p>
-</div>
-<div class="card">
-<div class="source">Tagesschau</div>
-<h3><a href="https://www.tagesschau.de/ausland/europa/russland-ukraine-wirtschaft-100.html" target="_blank">Russlands Raketen zerstören die ukrainische Wirtschaft</a></h3>
-<p></p>
-</div>
-<div class="card">
-<div class="source">Tagesschau</div>
-<h3><a href="https://www.tagesschau.de/wirtschaft/verbraucher/schufa-klage-100.html" target="_blank">Schattendatenbank: Der Schufa droht eine Sammelklage</a></h3>
-<p>Die NOYB, eine gemeinnützige Datenschutzorganisation, plant rechtliche Schritte gegen die Schufa wegen der sogenannten Schattendatenbank. Damit droht der größten deutschen Wirtschaftsauskunftei eine Sammelklage.</p>
-</div>
-<div class="card">
-<div class="source">Heise</div>
-<h3><a href="https://www.heise.de/news/SpaceX-will-100-Milliarden-US-Dollar-in-neuen-Weltraumbahnhof-stecken-11425928.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank">SpaceX will 100 Milliarden US-Dollar in neuen Weltraumbahnhof stecken</a></h3>
-<p>SpaceX plant den Bau seiner größten Startanlage in Louisiana. Von 2029 sollen dort</p>
-</div>
-<div class="card">
-<div class="source">Heise</div>
-<h3><a href="https://www.heise.de/news/Lego-Skylines-Paradox-macht-Staedtebau-aus-Klemmbausteinen-11425687.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank">Gamescom: „Lego Skylines“: Paradox macht Städtebau aus Klemmbausteinen</a></h3>
-<p></p>
-</div>
-<div class="card">
-<div class="source">Heise</div>
-<h3><a href="https://www.heise.de/news/iX-Workshop-Netzwerkarchitekturen-in-Proxmox-aufbauen-verwalten-und-schuetzen-11415574.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank">heise-Angebot: iX-Workshop: Netzwerkarchitekturen in Proxmox aufbauen, verwalten und schützen</a></h3>
-<p>Der Workshop vermittelt, wie man Proxmox‑VE‑Netzwerke professionell</p>
-</div>
-<div class="card">
-<div class="source">Heise</div>
-<h3><a href="https://www.heise.de/news/5000-Fans-feiern-neue-Spiele-bei-Gamescom-Eroeffnungsshow-11425841.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank">Gamescom: 5000 Fans feiern neue Spiele bei Gamescom-Eröffnungsshow</a></h3>
-<p></p>
-</div>
-<div class="card">
-<div class="source">Heise</div>
-<h3><a href="https://www.heise.de/tests/Leiser-China-Mini-PC-mit-sparsamem-Intel-Wildcat-Lake-Prozessor-im-Test-11387527.html?wt_mc=rss.red.ho.ho.atom.beitrag_plus.beitrag_plus" target="_blank">heise+ | Leiser China-Mini-PC mit sparsamem Intel-Wildcat-Lake-Prozessor im Test</a></h3>
-<p></p>
-</div>
-<div class="card">
-<div class="source">Zeit</div>
-<h3><a href="https://www.zeit.de/news/2026-08/26/spaetsommer-verwoehnt-mv-freitag-drohen-gewitter" target="_blank">Wetter: Spätsommer verwöhnt MV – Freitag drohen Gewitter</a></h3>
-<p></p>
-</div>
-<div class="card">
-<div class="source">Zeit</div>
-<h3><a href="https://www.zeit.de/gesellschaft/zeitgeschehen/2026-08/islamabad-feuer-entbindungsstation-babys-krankenhaus-pakistan" target="_blank">Pakistan: 15 Neugeborene durch Feuer auf Entbindungsstation in Pakistan getötet</a></h3>
-<p>In Islamabad brannte eine Entbindungsstation, bei dem</p>
-</div>
-<div class="card">
-<div class="source">Zeit</div>
-<h3><a href="https://www.zeit.de/news/2026-08/26/brand-in-lagerhalle-ein-verletzter-und-hoher-schaden" target="_blank">Brand im Saalekreis: Brand in Lagerhalle: Ein Verletzter und hoher Schaden</a></h3>
-<p>Im Saalekreis brannte eine Lagerhalle, bei dem Brand wurde ein Verletzter aufgefallen. Der Schaden ist laut Bericht als hoch einzustufen.</p>
-</div>
-<div class="card">
-<div class="source">Zeit</div>
-<h3><a href="https://www.zeit.de/news/2026-08/26/zwei-schwere-unfaelle-auf-der-a1-vollsperrung-bei-stuhr" target="_blank">Unfall: Zwei schwere Unfälle auf der A1 – Vollsperrung bei Stuhr</a></h3>
-<p></p>
-</div>
-<div class="card">
-<div class="source">Zeit</div>
-<h3><a href="https://www.zeit.de/news/2026-08/26/unwettergefahr-ab-donnerstag-kraeftige-gewitter-erwartet" target="_blank">Vorhersage: Unwettergefahr ab Donnerstag: Kräftige Gewitter erwartet</a></h3>
-<p></p>
-</div>
-</body></html>
+<body data-theme="light">
+  <div class="topbar">
+    <h1>📰 News Dashboard</h1>
+    <button class="toggle-btn" id="themeToggle" aria-label="Dark Mode umschalten">🌙</button>
+  </div>
+  <p class="updated">Zuletzt aktualisiert: 26.08.2026 06:18 Uhr</p>
+  
+        <div class="weather">
+          <span class="weather-icon">☁️</span>
+          <span class="weather-temp">16°C</span>
+          <span class="weather-desc">Bewölkt · Hannover</span>
+        </div>
+  
+        <div class="card" style="animation-delay:0.0s">
+          <div class="source">Tagesschau</div>
+          <h3><a href="https://www.tagesschau.de/inland/innenpolitik/kabinettsklausur-112.html" target="_blank" rel="noopener">Bundesregierung berät auf Kabinettsklausur über Klimakrise und Reformen</a></h3>
+          <p>Die Bundesregierung trifft sich in einer Kabinettsklausur, um die Klimakrise und an</p>
+        </div>
+        <div class="card" style="animation-delay:0.06s">
+          <div class="source">Tagesschau</div>
+          <h3><a href="https://www.tagesschau.de/wirtschaft/finanzen/marktberichte/marktbericht-boerse-dax-dow-jones-nvidia-100.html" target="_blank" rel="noopener">Marktbericht: Gute Vorgaben für den DAX</a></h3>
+          <p></p>
+        </div>
+        <div class="card" style="animation-delay:0.12s">
+          <div class="source">Tagesschau</div>
+          <h3><a href="https://www.tagesschau.de/kultur/dolly-parton-nachruf-100.html" target="_blank" rel="noopener">Trauer um Ikone Dolly Parton: "Sie schuf Lieder und Glück"</a></h3>
+          <p>Dolly Parton ist im Alter von 80 Jahren gestorben. Sie war eine unerschrockene Künstlerin, die Generationen begeisterte und sich stets für soziale Anliegen einsetzte.</p>
+        </div>
+        <div class="card" style="animation-delay:0.18s">
+          <div class="source">Tagesschau</div>
+          <h3><a href="https://www.tagesschau.de/ausland/europa/russland-ukraine-wirtschaft-100.html" target="_blank" rel="noopener">Russlands Raketen zerstören die ukrainische Wirtschaft</a></h3>
+          <p>Russland richtet mit Raketenangriffen gezielt Stahlwerke und Getreideschiffe an, um die ukrainische Wirtschaft zu zerstören und nutzt dabei seine Luftüberlegenheit aus. Ein zentrales Problem für die Ukraine ist die starke Abhängigkeit vom US‑Flugabwehrsystem „Patriot“.</p>
+        </div>
+        <div class="card" style="animation-delay:0.24s">
+          <div class="source">Tagesschau</div>
+          <h3><a href="https://www.tagesschau.de/wirtschaft/verbraucher/schufa-klage-100.html" target="_blank" rel="noopener">Schattendatenbank: Der Schufa droht eine Sammelklage</a></h3>
+          <p>Die NOYB, eine europäische Datenschutzorganisation, plant eine Sammelklage gegen die Schufa wegen der Schattendatenbank. Ziel ist es, die rechtlichen Konsequenzen dieser Datenbank für die größte deutsche Wirtschaftsauskunftei gerichtlich zu prüfen.</p>
+        </div>
+        <div class="card" style="animation-delay:0.3s">
+          <div class="source">Heise</div>
+          <h3><a href="https://www.heise.de/news/Firewalling-jetzt-auch-im-Switch-Ciscos-neues-Release-fuer-Nexus-Smart-Modelle-11425649.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Firewalling jetzt auch im Switch: Ciscos neues Release für Nexus-Smart-Modelle</a></h3>
+          <p>Cisco führt mit einem neuen Release den DPU Security Modus ein. Damit lässt sich Layer‑4‑Stateful‑Firewalling direkt auf den Data Processing Units von Nexus‑Switches betreiben.</p>
+        </div>
+        <div class="card" style="animation-delay:0.36s">
+          <div class="source">Heise</div>
+          <h3><a href="https://www.heise.de/news/SpaceX-will-100-Milliarden-US-Dollar-in-neuen-Weltraumbahnhof-stecken-11425928.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">SpaceX will 100 Milliarden US-Dollar in neuen Weltraumbahnhof stecken</a></h3>
+          <p>SpaceX</p>
+        </div>
+        <div class="card" style="animation-delay:0.42s">
+          <div class="source">Heise</div>
+          <h3><a href="https://www.heise.de/news/Lego-Skylines-Paradox-macht-Staedtebau-aus-Klemmbausteinen-11425687.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Gamescom: „Lego Skylines“: Paradox macht Städtebau aus Klemmbausteinen</a></h3>
+          <p></p>
+        </div>
+        <div class="card" style="animation-delay:0.48s">
+          <div class="source">Heise</div>
+          <h3><a href="https://www.heise.de/news/iX-Workshop-Netzwerkarchitekturen-in-Proxmox-aufbauen-verwalten-und-schuetzen-11415574.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">heise-Angebot: iX-Workshop: Netzwerkarchitekturen in Proxmox aufbauen, verwalten und schützen</a></h3>
+          <p></p>
+        </div>
+        <div class="card" style="animation-delay:0.54s">
+          <div class="source">Heise</div>
+          <h3><a href="https://www.heise.de/news/5000-Fans-feiern-neue-Spiele-bei-Gamescom-Eroeffnungsshow-11425841.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Gamescom: 5000 Fans feiern neue Spiele bei Gamescom-Eröffnungsshow</a></h3>
+          <p></p>
+        </div>
+        <div class="card" style="animation-delay:0.6s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/politik/ausland/2026-08/john-ratcliffe-cia-moskau-russland-geheimdienst" target="_blank" rel="noopener">John Ratcliffe: CIA-Chef führt in Moskau Gespräche über Geheimdienstkontakte</a></h3>
+          <p>Russland bestätigte, dass CIA-Chef John Ratcliffe in Moskau war, um über Geheimdienst</p>
+        </div>
+        <div class="card" style="animation-delay:0.6599999999999999s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/luxus-auto-fuer-250-000-euro-in-stuttgart-gestohlen" target="_blank" rel="noopener">Zeugen gesucht: Luxus-Auto für 250.000 Euro in Stuttgart gestohlen</a></h3>
+          <p></p>
+        </div>
+        <div class="card" style="animation-delay:0.72s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/reise-zum-mars-elversberg-freut-sich-auf-die-bundesliga" target="_blank" rel="noopener">Bundesliga-Neuling: «Reise zum Mars»: Elversberg freut sich auf die Bundesliga</a></h3>
+          <p>Um die Nachricht präzise zusammenfassen zu können, benötige ich den vollständigen Text. Bitte teilen Sie mir den gesamten Inhalt mit, damit ich ihn in zwei kurzen Sätzen auf Deutsch zusammenf</p>
+        </div>
+        <div class="card" style="animation-delay:0.78s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/politik/deutschland/2026-08/afd-youtube-streamer-aktivist-mann-bjoern-banane-wahlkampf-sachsen-anhalt-ulrich-siegmund" target="_blank" rel="noopener">AfD und YouTube-Streamer: Der AfD-Pakt mit fragwürdigen Streamern</a></h3>
+          <p></p>
+        </div>
+        <div class="card" style="animation-delay:0.84s">
+          <div class="source">Zeit</div>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/spaetsommer-verwoehnt-mv-freitag-drohen-gewitter" target="_blank" rel="noopener">Wetter: Spätsommer verwöhnt MV – Freitag drohen Gewitter</a></h3>
+          <p></p>
+        </div>
+
+<script>
+  const btn = document.getElementById('themeToggle');
+  const body = document.body;
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    body.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️';
+  }
+  btn.addEventListener('click', () => {
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    btn.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+</script>
+</body>
+</html>
