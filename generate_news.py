@@ -16,6 +16,11 @@ FEEDS_TECH = {
     "Golem": "https://rss.golem.de/rss.php?feed=RSS2.0",
 }
 
+CATEGORY_COLORS = {
+    "allgemein": "#2563eb",
+    "tech": "#d97706",
+}
+
 LAT, LON = 51.9366, 8.8781
 CITY_NAME = "Detmold"
 
@@ -23,7 +28,6 @@ GITHUB_USERNAME = "Jonas-sz"
 
 EXAM_DATE = date(2027, 4, 27)
 
-# Feiertage NRW (fest + bewegliche für die nächsten Jahre)
 HOLIDAYS = {
     date(2026, 1, 1): "Neujahr", date(2026, 4, 3): "Karfreitag", date(2026, 4, 6): "Ostermontag",
     date(2026, 5, 1): "Tag der Arbeit", date(2026, 5, 14): "Christi Himmelfahrt",
@@ -35,7 +39,6 @@ HOLIDAYS = {
     date(2027, 5, 17): "Pfingstmontag", date(2027, 5, 27): "Fronleichnam",
 }
 
-# Schnellzugriff-Kacheln
 QUICK_LINKS = [
     {"name": "Zeiterfassung", "url": "https://514057.landwehr-hosting.de/index.php?page=Zeiterfassung.TimePunch", "icon": "⏱️"},
     {"name": "WebUntis", "url": "https://webuntis.com/", "icon": "🏫"},
@@ -175,8 +178,7 @@ def fetch_news(feed_dict, category):
                 "_norm": normalize_title(entry.title),
             })
 
-    seen_titles = set()
-    deduped = []
+    seen_titles, deduped = set(), []
     for a in articles:
         if a["_norm"] in seen_titles:
             continue
@@ -194,13 +196,13 @@ def build_greeting():
     return "Guten Abend, Jonas 🌙"
 
 
-def render_cards(articles):
-    cards_html = ""
-    for i, a in enumerate(articles):
-        delay = i * 0.05
-        new_badge = '<span class="badge-new">NEU</span>' if a["is_new"] else ""
-        cards_html += f"""
-        <div class="card" data-category="{a['category']}" style="animation-delay:{delay}s">
+def render_card(a, index, hero=False):
+    delay = index * 0.05
+    new_badge = '<span class="badge-new">NEU</span>' if a["is_new"] else ""
+    color = CATEGORY_COLORS.get(a["category"], "#2563eb")
+    cls = "card hero-card" if hero else "card"
+    return f"""
+        <div class="{cls}" data-category="{a['category']}" style="animation-delay:{delay}s; --cat-color:{color}">
           <div class="card-top">
             <div class="source">{a['source']}</div>
             {new_badge}
@@ -209,7 +211,6 @@ def render_cards(articles):
           <p>{a['summary']}</p>
           <div class="read-time">⏱️ ~{a['read_min']} Min Lesezeit</div>
         </div>"""
-    return cards_html
 
 
 def build_html(articles, weather, github_activity, holiday):
@@ -281,7 +282,26 @@ def build_html(articles, weather, github_activity, holiday):
         items = "".join(f"<li>{e}</li>" for e in fetch_errors)
         errors_html = f'<div class="error-log">⚠️ Hinweise: <ul>{items}</ul></div>'
 
-    cards_html = render_cards(articles)
+    # Statistik-Leiste
+    sources_count = len(set(a["source"] for a in articles))
+    tech_count = len([a for a in articles if a["category"] == "tech"])
+    allg_count = len([a for a in articles if a["category"] == "allgemein"])
+    stats_html = f"""
+      <div class="stats-bar">
+        <div class="stat"><strong>{len(articles)}</strong> Artikel</div>
+        <div class="stat-sep">·</div>
+        <div class="stat"><strong>{sources_count}</strong> Quellen</div>
+        <div class="stat-sep">·</div>
+        <div class="stat"><strong>{allg_count}</strong> Allgemein</div>
+        <div class="stat-sep">·</div>
+        <div class="stat"><strong>{tech_count}</strong> Tech &amp; Cloud</div>
+      </div>"""
+
+    hero_html = ""
+    rest_html = ""
+    if articles:
+        hero_html = render_card(articles[0], 0, hero=True)
+        rest_html = "".join(render_card(a, i + 1) for i, a in enumerate(articles[1:]))
 
     return f"""<!DOCTYPE html>
 <html lang="de">
@@ -290,58 +310,80 @@ def build_html(articles, weather, github_activity, holiday):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jonas' Startseite</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {{
-    --bg: #f4f5f7; --card-bg: #ffffff; --text: #1a1a1a; --text-muted: #6b7280;
-    --accent: #2563eb; --border: #e5e7eb;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --bg: #f0f1f5; --card-bg: rgba(255,255,255,0.7); --solid-card-bg: #ffffff;
+    --text: #1a1a1a; --text-muted: #6b7280;
+    --accent: #2563eb; --border: rgba(255,255,255,0.4);
+    --shadow: 0 4px 24px rgba(15,23,42,0.06);
   }}
   [data-theme="dark"] {{
-    --bg: #0f1115; --card-bg: #1a1d23; --text: #e8e9ec; --text-muted: #9aa0aa;
-    --accent: #60a5fa; --border: #2a2e37;
-    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --bg: #0b0d12; --card-bg: rgba(26,29,35,0.6); --solid-card-bg: #1a1d23;
+    --text: #e8e9ec; --text-muted: #9aa0aa;
+    --accent: #60a5fa; --border: rgba(255,255,255,0.08);
+    --shadow: 0 4px 24px rgba(0,0,0,0.35);
   }}
   * {{ box-sizing: border-box; }}
   body {{
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    max-width: 840px; margin: 0 auto; padding: 32px 20px 60px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 860px; margin: 0 auto; padding: 32px 20px 60px;
     color: var(--text); background: var(--bg);
-    background-image: radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%),
-                       radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 40%);
+    background-image:
+      radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 45%),
+      radial-gradient(circle at 85% 15%, color-mix(in srgb, #d97706 12%, transparent), transparent 40%),
+      radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 50%);
     background-attachment: fixed;
-    transition: background 0.25s ease, color 0.25s ease;
+    background-size: 200% 200%;
+    animation: bgShift 18s ease-in-out infinite alternate;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }}
+  @keyframes bgShift {{
+    0% {{ background-position: 0% 0%, 100% 0%, 50% 100%; }}
+    100% {{ background-position: 10% 15%, 85% 20%, 40% 85%; }}
   }}
   .topbar {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }}
-  h1 {{ font-size: 1.6em; margin: 0; }}
-  .updated {{ color: var(--text-muted); font-size: 0.85em; margin: 4px 0 20px; display: flex; gap: 10px; align-items: center; }}
-  .counter {{ background: var(--card-bg); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; font-size: 0.85em; }}
+  h1 {{ font-size: 1.7em; margin: 0; font-weight: 800; letter-spacing: -0.02em; }}
+  .updated {{ color: var(--text-muted); font-size: 0.85em; margin: 4px 0 14px; }}
+  .stats-bar {{
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 0.85em; color: var(--text-muted); margin-bottom: 22px;
+  }}
+  .stats-bar strong {{ color: var(--text); }}
+  .stat-sep {{ opacity: 0.4; }}
   .toggle-btn {{
-    background: var(--card-bg); border: 1px solid var(--border); border-radius: 999px;
+    background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 999px;
     width: 40px; height: 40px; cursor: pointer; font-size: 1.1em;
     display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease;
   }}
   .toggle-btn:hover {{ transform: scale(1.08) rotate(-8deg); }}
-  .widgets {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 28px; }}
+  .widgets {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 22px; }}
   .widget {{
-    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+    background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border); border-radius: 16px;
     padding: 16px 18px; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease;
   }}
-  .widget:hover {{ transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }}
+  .widget:hover {{ transform: translateY(-3px); }}
   .weather-main {{ display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }}
   .forecast {{ display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 10px; }}
   .fc-day {{ text-align: center; font-size: 0.78em; color: var(--text-muted); }}
   .fc-temps {{ color: var(--text); font-weight: 500; }}
   .quicklinks {{ display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }}
   .quicklink {{
-    display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
     border-radius: 12px; padding: 10px 16px; color: var(--text); text-decoration: none; font-size: 0.9em;
     font-weight: 500; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }}
-  .quicklink:hover {{ transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: var(--accent); }}
+  .quicklink:hover {{ transform: translateY(-3px); border-color: var(--accent); }}
   .quicklink-icon {{ font-size: 1.15em; }}
   .countdown, .holiday {{ display: flex; align-items: center; gap: 12px; }}
   .weather-icon, .countdown-icon {{ font-size: 2em; }}
-  .weather-temp, .countdown-days {{ font-size: 1.3em; font-weight: 600; }}
+  .weather-temp, .countdown-days {{ font-size: 1.3em; font-weight: 700; }}
   .widget-sub {{ color: var(--text-muted); font-size: 0.85em; }}
   .widget-title {{ font-weight: 600; margin-bottom: 10px; font-size: 0.95em; }}
   .gh-list {{ list-style: none; margin: 0; padding: 0; font-size: 0.88em; }}
@@ -350,32 +392,38 @@ def build_html(articles, weather, github_activity, holiday):
   .gh-label {{ color: var(--accent); font-weight: 500; }}
   .tabs {{ display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }}
   .tab-btn {{
-    background: var(--card-bg); border: 1px solid var(--border); border-radius: 999px;
+    background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 999px;
     padding: 8px 16px; font-size: 0.88em; cursor: pointer; color: var(--text-muted);
   }}
   .tab-btn.active {{ background: var(--accent); color: white; border-color: var(--accent); }}
   .card {{
-    background: var(--card-bg); border: 1px solid var(--border); padding: 18px 22px; margin-bottom: 14px;
-    border-radius: 14px; box-shadow: var(--shadow); opacity: 0; animation: fadeInUp 0.5s ease forwards;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border); border-left: 3px solid var(--cat-color);
+    padding: 18px 22px; margin-bottom: 14px;
+    border-radius: 16px; box-shadow: var(--shadow); opacity: 0; animation: fadeInUp 0.5s ease forwards;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }}
-  .card:hover {{ transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.1); border-color: var(--accent); }}
+  .card:hover {{ transform: translateY(-3px); box-shadow: 0 12px 32px rgba(15,23,42,0.12); }}
   .card.hidden {{ display: none; }}
+  .hero-card {{ padding: 26px 28px; margin-bottom: 20px; }}
+  .hero-card h3 {{ font-size: 1.4em; }}
+  .hero-card p {{ font-size: 1.02em; }}
   @keyframes fadeInUp {{ from {{ opacity: 0; transform: translateY(8px); }} to {{ opacity: 1; transform: translateY(0); }} }}
   .card-top {{ display: flex; justify-content: space-between; align-items: center; }}
-  .source {{ color: var(--accent); font-size: 0.78em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }}
+  .source {{ color: var(--cat-color); font-size: 0.78em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }}
   .badge-new {{ background: #16a34a; color: white; font-size: 0.7em; font-weight: 700; padding: 2px 8px; border-radius: 999px; letter-spacing: 0.03em; }}
-  .card h3 {{ margin: 6px 0 8px; font-size: 1.05em; }}
+  .card h3 {{ margin: 6px 0 8px; font-size: 1.05em; font-weight: 700; }}
   .card a {{ color: var(--text); text-decoration: none; }}
   .card a:hover {{ color: var(--accent); }}
-  .card p {{ margin: 0 0 8px; color: var(--text-muted); line-height: 1.5; font-size: 0.95em; }}
+  .card p {{ margin: 0 0 8px; color: var(--text-muted); line-height: 1.55; font-size: 0.95em; }}
   .read-time {{ color: var(--text-muted); font-size: 0.78em; }}
-  .error-log {{ margin-top: 24px; font-size: 0.78em; color: var(--text-muted); background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }}
+  .error-log {{ margin-top: 24px; font-size: 0.78em; color: var(--text-muted); background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }}
   .error-log ul {{ margin: 4px 0 0; padding-left: 18px; }}
   .scroll-top {{
     position: fixed; bottom: 24px; right: 24px; width: 44px; height: 44px; border-radius: 999px;
     background: var(--accent); color: white; border: none; cursor: pointer; font-size: 1.2em;
-    display: none; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    display: none; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
     transition: opacity 0.2s ease;
   }}
   .scroll-top.visible {{ display: flex; }}
@@ -392,7 +440,8 @@ def build_html(articles, weather, github_activity, holiday):
     <h1>{greeting}</h1>
     <button class="toggle-btn" id="themeToggle" aria-label="Dark Mode umschalten">🌙</button>
   </div>
-  <p class="updated">Zuletzt aktualisiert: {now} Uhr <span class="counter">{len(articles)} Artikel</span></p>
+  <p class="updated">Zuletzt aktualisiert: {now} Uhr</p>
+  {stats_html}
 
   <div class="widgets">
     {weather_html}
@@ -409,7 +458,8 @@ def build_html(articles, weather, github_activity, holiday):
     <button class="tab-btn" data-filter="tech">Tech &amp; Cloud</button>
   </div>
 
-  {cards_html}
+  {hero_html}
+  {rest_html}
 
   {errors_html}
 
