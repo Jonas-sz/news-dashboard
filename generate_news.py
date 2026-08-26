@@ -69,29 +69,14 @@ def fetch_weather():
     try:
         url = (
             f"https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}"
-            f"&current=temperature_2m,weather_code"
-            f"&daily=temperature_2m_max,temperature_2m_min,weather_code"
-            f"&timezone=Europe%2FBerlin&forecast_days=4"
+            f"&current=temperature_2m,weather_code&timezone=Europe%2FBerlin"
         )
         r = requests.get(url, timeout=10)
         data = r.json()
         temp = round(data["current"]["temperature_2m"])
         code = data["current"]["weather_code"]
         desc, icon = WEATHER_CODES.get(code, ("Unbekannt", "🌡️"))
-
-        forecast = []
-        days = data.get("daily", {})
-        dates = days.get("time", [])[1:4]
-        tmax = days.get("temperature_2m_max", [])[1:4]
-        tmin = days.get("temperature_2m_min", [])[1:4]
-        codes = days.get("weather_code", [])[1:4]
-        weekdays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-        for i, d in enumerate(dates):
-            wd = weekdays[date.fromisoformat(d).weekday()]
-            _, ic = WEATHER_CODES.get(codes[i], ("", "🌡️"))
-            forecast.append({"day": wd, "icon": ic, "max": round(tmax[i]), "min": round(tmin[i])})
-
-        return {"temp": temp, "desc": desc, "icon": icon, "forecast": forecast}
+        return {"temp": temp, "desc": desc, "icon": icon}
     except Exception as e:
         fetch_errors.append(f"Wetter: {e}")
         return None
@@ -220,21 +205,13 @@ def build_html(articles, weather, github_activity, holiday):
 
     weather_html = ""
     if weather:
-        forecast_html = "".join(
-            f'<div class="fc-day"><div>{f["day"]}</div><div>{f["icon"]}</div>'
-            f'<div class="fc-temps">{f["max"]}°/{f["min"]}°</div></div>'
-            for f in weather["forecast"]
-        )
         weather_html = f"""
         <div class="widget weather">
-          <div class="weather-main">
-            <span class="weather-icon">{weather['icon']}</span>
-            <div>
-              <div class="weather-temp">{weather['temp']}°C</div>
-              <div class="widget-sub">{weather['desc']} · {CITY_NAME}</div>
-            </div>
+          <span class="weather-icon">{weather['icon']}</span>
+          <div>
+            <div class="weather-temp">{weather['temp']}°C</div>
+            <div class="widget-sub">{weather['desc']} · {CITY_NAME}</div>
           </div>
-          <div class="forecast">{forecast_html}</div>
         </div>"""
 
     countdown_html = f"""
@@ -367,10 +344,7 @@ def build_html(articles, weather, github_activity, holiday):
     padding: 16px 18px; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease;
   }}
   .widget:hover {{ transform: translateY(-3px); }}
-  .weather-main {{ display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }}
-  .forecast {{ display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 10px; }}
-  .fc-day {{ text-align: center; font-size: 0.78em; color: var(--text-muted); }}
-  .fc-temps {{ color: var(--text); font-weight: 500; }}
+  .weather {{ display: flex; align-items: center; gap: 12px; }}
   .quicklinks {{ display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }}
   .quicklink {{
     display: flex; align-items: center; gap: 8px;
