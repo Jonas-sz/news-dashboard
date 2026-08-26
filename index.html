@@ -29,8 +29,11 @@
     max-width: 840px;
     margin: 0 auto;
     padding: 32px 20px 60px;
-    background: var(--bg);
     color: var(--text);
+    background: var(--bg);
+    background-image: radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%),
+                       radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 40%);
+    background-attachment: fixed;
     transition: background 0.25s ease, color 0.25s ease;
   }
   .topbar {
@@ -51,7 +54,7 @@
     display: flex; align-items: center; justify-content: center;
     transition: transform 0.15s ease;
   }
-  .toggle-btn:hover { transform: scale(1.08); }
+  .toggle-btn:hover { transform: scale(1.08) rotate(-8deg); }
 
   .widgets {
     display: grid;
@@ -65,7 +68,40 @@
     border-radius: 14px;
     padding: 16px 18px;
     box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
+  .widget:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+
+  .quicklinks {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .quicklink {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .quicklink:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: var(--accent);
+  }
+  .quicklink-icon { font-size: 1.15em; }
   .weather, .countdown { display: flex; align-items: center; gap: 12px; }
   .weather-icon, .countdown-icon { font-size: 2em; }
   .weather-temp, .countdown-days { font-size: 1.3em; font-weight: 600; }
@@ -106,6 +142,12 @@
     box-shadow: var(--shadow);
     opacity: 0;
     animation: fadeInUp 0.5s ease forwards;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+    border-color: var(--accent);
   }
   .card.hidden { display: none; }
   @keyframes fadeInUp {
@@ -130,14 +172,14 @@
     <h1>Guten Morgen, Jonas ☀️</h1>
     <button class="toggle-btn" id="themeToggle" aria-label="Dark Mode umschalten">🌙</button>
   </div>
-  <p class="updated">Zuletzt aktualisiert: 26.08.2026 08:11 Uhr</p>
+  <p class="updated">Zuletzt aktualisiert: 26.08.2026 08:30 Uhr</p>
 
   <div class="widgets">
     
         <div class="widget weather">
           <span class="weather-icon">☁️</span>
           <div>
-            <div class="weather-temp">17°C</div>
+            <div class="weather-temp">18°C</div>
             <div class="widget-sub">Bewölkt · Hannover</div>
           </div>
         </div>
@@ -156,6 +198,8 @@
         </div>
   </div>
 
+  <div class="quicklinks"><a class="quicklink" href="https://514057.landwehr-hosting.de/index.php?page=Zeiterfassung.TimePunch" target="_blank" rel="noopener"><span class="quicklink-icon">⏱️</span><span>Zeiterfassung</span></a><a class="quicklink" href="https://webuntis.com/" target="_blank" rel="noopener"><span class="quicklink-icon">🏫</span><span>WebUntis</span></a><a class="quicklink" href="https://github.com/dashboard" target="_blank" rel="noopener"><span class="quicklink-icon">🐙</span><span>GitHub</span></a><a class="quicklink" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener"><span class="quicklink-icon">💬</span><span>M365 Copilot</span></a></div>
+
   <div class="tabs">
     <button class="tab-btn active" data-filter="all">Alle</button>
     <button class="tab-btn" data-filter="allgemein">Allgemein</button>
@@ -165,53 +209,53 @@
   
         <div class="card" data-category="allgemein" style="animation-delay:0.0s">
           <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/ausland/asien/brand-kinderkrankenhaus-islamabad-100.html" target="_blank" rel="noopener">Pakistan: Tote bei Brand auf Säuglingsstation in Islamabad</a></h3>
-          <p></p>
+          <h3><a href="https://www.tagesschau.de/inland/gesellschaft/protestaktion-magdeburg-migranten-100.html" target="_blank" rel="noopener">Migranten und Forscher warnen vor AfD-Regierung in Sachsen-Anhalt</a></h3>
+          <p>Viele Menschen mit Migrationshintergrund schließen in Magdeburg ihre Geschäfte, um die möglichen Folgen einer AfD-Regierung in Sachsen-Anhalt zu veranschaulichen. Forscher warnen, dass ohne Migration das Wirtschaftswachstum zurückgehen würde.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.05s">
           <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/inland/innenpolitik/kabinettsklausur-112.html" target="_blank" rel="noopener">Bundesregierung berät auf Kabinettsklausur über Klimakrise und Reformen</a></h3>
-          <p></p>
+          <h3><a href="https://www.tagesschau.de/ausland/asien/brand-kinderkrankenhaus-islamabad-100.html" target="_blank" rel="noopener">Pakistan: Tote bei Brand auf Säuglingsstation in Islamabad</a></h3>
+          <p>In Islamabad explodiert ein Krankenhausfeuer, bei dem mindestens 14 Neugeborene sterben. Erste Hinweise deuten darauf hin, dass ein Defekt an der Klimaanlage den Brand ausgelöst haben könnte.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.1s">
           <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/wirtschaft/finanzen/marktberichte/marktbericht-boerse-dax-dow-jones-nvidia-100.html" target="_blank" rel="noopener">Marktbericht: Gute Vorgaben für den DAX</a></h3>
-          <p>Der Marktbericht hebt hervor, dass die US- und Asien‑Vorgaben dem DAX einen stabil positiven Start versprechen. Allerdings bleibt die Stimmung angespannt wegen der noch ausstehenden Nvidia‑Ergebnisse am Abend.</p>
+          <h3><a href="https://www.tagesschau.de/inland/innenpolitik/kabinettsklausur-112.html" target="_blank" rel="noopener">Bundesregierung berät auf Kabinettsklausur über Klimakrise und Reformen</a></h3>
+          <p>Die Bundesregierung diskutiert auf Kabinettsklausur über Wirtschaft, Reformen und die Klimakrise, wobei Union und SPD Uneinigkeit zeigen. Trotz Spaltungen bleiben beide Koalitionspartner optimistisch und kämpferisch.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.15000000000000002s">
           <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/kultur/dolly-parton-nachruf-100.html" target="_blank" rel="noopener">Trauer um Ikone Dolly Parton: "Sie schuf Lieder und Glück"</a></h3>
-          <p></p>
+          <h3><a href="https://www.tagesschau.de/wirtschaft/finanzen/marktberichte/marktbericht-boerse-dax-dow-jones-nvidia-100.html" target="_blank" rel="noopener">Marktbericht: Gute Vorgaben für den DAX</a></h3>
+          <p>Der DAX dürfte dank guter US- und asiatischer Vorgaben einen leicht positiven Start hinnehmen. Die Unsicherheit bleibt jedoch vor allem im Blick auf die Nvidia-Quartalzahlen am Abend.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.2s">
           <div class="source">Tagesschau</div>
-          <h3><a href="https://www.tagesschau.de/ausland/europa/russland-ukraine-wirtschaft-100.html" target="_blank" rel="noopener">Russlands Raketen zerstören die ukrainische Wirtschaft</a></h3>
-          <p>Russland zerstört die ukrainische Wirtschaft, indem es Stahlwerke und Getreideschiffe angreift und seine Luftüberlegenheit nutzt. Das Hauptproblem der Ukraine ist die Abhängigkeit vom US‑Patriot-Flugabwehrsystem.</p>
+          <h3><a href="https://www.tagesschau.de/kultur/dolly-parton-nachruf-100.html" target="_blank" rel="noopener">Trauer um Ikone Dolly Parton: "Sie schuf Lieder und Glück"</a></h3>
+          <p>Dolly Parton, 80, ist verstorben. Sie war eine unerschrockene Künstlerin und soziale Befürworterin, die Generationen inspiriert hat.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.25s">
           <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/kurz-als-mahner-oesterreichs-ex-kanzler-wird-40" target="_blank" rel="noopener">Geburtstag auf dem Bauernhof: Kurz als Mahner - Österreichs Ex-Kanzler wird 40</a></h3>
-          <p></p>
+          <h3><a href="https://www.zeit.de/politik/deutschland/2026-08/bedrohungen-angriffe-buergermeister-sachsen-anhalt-mecklenburg-vorpommern-koerber-stiftung" target="_blank" rel="noopener">Kommunen: Sechs von zehn Bürgermeistern in Sachsen-Anhalt erleben Anfeindungen</a></h3>
+          <p>61 % der Bürgermeister in Sachsen‑Anhalt berichten von Beleidigungen, Bedrohungen oder Angriffen. Auch Amt</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.30000000000000004s">
           <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/gesellschaft/zeitgeschehen/2026-08/magdeburg-protest-gewerbetreibende-afd-landtagswahl-sachsen-anhalt" target="_blank" rel="noopener">Sachsen-Anhalt: Läden in Magdeburg protestieren mit »Migra-Streik« gegen AfD</a></h3>
-          <p></p>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/saar-landtag-diskutiert-ueber-sicherheit-und-schul-inklusion" target="_blank" rel="noopener">Landtag: Saar-Regierung sieht Zukunft für umweltfreundlichen Stahl</a></h3>
+          <p>Um welches Thema soll ich zusammenfassen? Bitte gib mir den vollständigen Text des Artikels.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.35000000000000003s">
           <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/neustart-nach-schwieriger-saison-thw-kiel-setzt-auf-koester" target="_blank" rel="noopener">Handball: Neustart nach schwieriger Saison: THW Kiel setzt auf Köster</a></h3>
-          <p>Ich habe leider keinen Zugriff auf den vollständigen Text des Artikels, daher kann ich ihn nicht zusammenfassen. Wenn du mir den Inhalt zur Verfügung stellst, helfe ich dir gern weiter.</p>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/mann-faehrt-mit-auto-gegen-baum-und-stirbt" target="_blank" rel="noopener">Unfallursache unklar: Mann fährt mit Auto gegen Baum und stirbt</a></h3>
+          <p>Ich brauche den vollständigen Text der Nachricht, um eine präzise Zusammenfassung erstellen zu können. Bitte geben Sie mir den Artikelinhalt an.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.4s">
           <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/2026/37/ulrich-siegmund-spiegel-cover-afd-sachsen-anhalt" target="_blank" rel="noopener">Ulrich Siegmund: Das falsche Spiegelbild</a></h3>
-          <p>Ulrich Siegmund wird in einem Cover als „gefährlichster Mann Deutschlands“ bezeichnet. Bei AfD‑Fans steigt dadurch der Preis für diese Darstellung.</p>
+          <h3><a href="https://www.zeit.de/wirtschaft/2026-08/isabel-schnabel-ezb-leitzins-inflation" target="_blank" rel="noopener">Inflation: EZB-Direktorin Isabel Schnabel spricht sich für höheren Leitzins aus</a></h3>
+          <p>Die EZB-Direktorin Isabel Schnabel prognostiziert anhaltend hohe Inflation. Sie befürwortet eine mögliche Erhöhung des Leitzinses auf 2,5 %.</p>
         </div>
         <div class="card" data-category="allgemein" style="animation-delay:0.45s">
           <div class="source">Zeit</div>
-          <h3><a href="https://www.zeit.de/news/2026-08/26/mitarbeiter-des-frankfurter-flughafens-an-malaria-gestorben" target="_blank" rel="noopener">Krankheiten: Mitarbeiter des Frankfurter Flughafens an Malaria gestorben</a></h3>
-          <p>Ich benötige dazu den vollständigen Artikeltext, um die Nachricht korrekt zusammenfassen zu können. Bitte gib mir den Text, damit ich</p>
+          <h3><a href="https://www.zeit.de/news/2026-08/26/bundesbank-wero-und-digitalen-euro-verzahnen" target="_blank" rel="noopener">Europäische Bezahlalternativen: Bundesbank: Wero und digitalen Euro verzahnen</a></h3>
+          <p>Ich benötige den vollständigen Text der Nachricht, um sie präz</p>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.5s">
           <div class="source">Heise</div>
@@ -231,17 +275,17 @@
         <div class="card" data-category="tech" style="animation-delay:0.65s">
           <div class="source">Heise</div>
           <h3><a href="https://www.heise.de/news/WordPress-Plug-in-TranslatePress-ermoeglicht-Uebernahme-bei-400-000-Installationen-11426021.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">WordPress-Plug-in TranslatePress ermöglicht Übernahme bei 400.000 Installationen</a></h3>
-          <p>TranslatePress für WordPress hat eine Schwachstelle, die rund 400.000 Installationen gefährdet.</p>
+          <p>Die Lücke im WordPress‑Plugin TranslatePress gefährdet rund 400.000 Install</p>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.7000000000000001s">
           <div class="source">Heise</div>
           <h3><a href="https://www.heise.de/news/Erfolgreicher-Ausseneinsatz-Neue-Antenne-fuer-die-Raumstation-ISS-11426107.html?wt_mc=rss.red.ho.ho.atom.beitrag.beitrag" target="_blank" rel="noopener">Astronautin und Astronaut bringen neue Antenne an ISS an</a></h3>
-          <p></p>
+          <p>Astronauten setzten an der ISS eine neue Kommunikationsantenne ein. Die Raumstation, die als Oldtimer gilt, muss regelmäßig gewartet und aktualisiert werden.</p>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.75s">
           <div class="source">Golem</div>
           <h3><a href="https://www.golem.de/news/jetzt-updaten-327-sicherheitsluecken-in-google-chrome-gepatcht-2608-212303.html" target="_blank" rel="noopener">Jetzt updaten: 327 Sicherheitslücken in Google Chrome gepatcht</a></h3>
-          <p>Google Chrome hat 327 Sicherheitslücken gepatcht, die bisher mehr als 300 Angriffsflächen eröffneten. Alle Nutzer sollten das Update sofort installieren, um sich vor potenziellen Bedroh</p>
+          <p>Google Chrome hat 327 Sicherheitslücken behoben, die viele Nutzer angreifbar machten. Das aktuelle Update schützt davor und sollte</p>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.8s">
           <div class="source">Golem</div>
@@ -251,17 +295,17 @@
         <div class="card" data-category="tech" style="animation-delay:0.8500000000000001s">
           <div class="source">Golem</div>
           <h3><a href="https://www.golem.de/news/spielekonsole-lenovos-bios-update-macht-legion-go-kaputt-2608-212301.html" target="_blank" rel="noopener">Spielekonsole: Lenovo bestätigt Bios-Update als Ursache für kaputte Legion Go</a></h3>
-          <p></p>
+          <p>Lenovo hat eingeräumt, dass ein BIOS‑Update der Legion Go die Konsole beschädigt hat. Trotzdem muss ein Betrachter mehrere Hundert Euro für die Reparatur aufbringen.</p>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.9s">
           <div class="source">Golem</div>
           <h3><a href="https://www.golem.de/news/58-personen-verhaftet-grosser-schlag-gegen-onlinebetrug-und-geldwaesche-2608-212299.html" target="_blank" rel="noopener">58 Personen verhaftet: Großer Schlag gegen Onlinebetrug und Geldwäsche</a></h3>
-          <p></p>
+          <p>St</p>
         </div>
         <div class="card" data-category="tech" style="animation-delay:0.9500000000000001s">
           <div class="source">Golem</div>
           <h3><a href="https://www.golem.de/news/vorschau-metro-2039-zurueck-in-der-hoelle-unter-moskau-2608-212170.html" target="_blank" rel="noopener">Vorschau Metro 2039: Zurück in der Hölle unter Moskau</a></h3>
-          <p>Golem hat Metro 2039 mehrere Stunden gespielt und berichtet, dass die Rückkehr nach Moskau düster, brutal und zugleich vielversprechend ist. Der Artikel von Peter Steinlechner beschreibt die Hölle unter der</p>
+          <p>Golem hat Metro 2039 mehrere Stunden gespielt und findet die Rückkehr nach Moskau düster und brutal, aber gleichzeitig vielversprechend. Der Titel verspricht ein intensives und düsteres Spielerlebnis in der</p>
         </div>
 
 <script>
