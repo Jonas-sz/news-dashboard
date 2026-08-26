@@ -22,6 +22,14 @@ GITHUB_USERNAME = "Jonas-sz"
 
 EXAM_DATE = date(2027, 4, 27)
 
+# Schnellzugriff-Kacheln - hier eigene Links eintragen (Name, URL, Icon/Emoji)
+QUICK_LINKS = [
+    {"name": "Zeiterfassung", "url": "https://514057.landwehr-hosting.de/index.php?page=Zeiterfassung.TimePunch", "icon": "⏱️"},
+    {"name": "WebUntis", "url": "https://webuntis.com/", "icon": "🏫"},
+    {"name": "GitHub", "url": "https://github.com/dashboard", "icon": "🐙"},
+    {"name": "M365 Copilot", "url": "https://m365.cloud.microsoft/chat", "icon": "💬"},
+]
+
 WEATHER_CODES = {
     0: ("Klarer Himmel", "☀️"), 1: ("Überwiegend klar", "🌤️"), 2: ("Teilweise bewölkt", "⛅"),
     3: ("Bewölkt", "☁️"), 45: ("Nebel", "🌫️"), 48: ("Nebel", "🌫️"),
@@ -188,6 +196,15 @@ def build_html(articles, weather, github_activity):
           <ul class="gh-list">{items}</ul>
         </div>"""
 
+    links_html = ""
+    if QUICK_LINKS:
+        tiles = "".join(
+            f'<a class="quicklink" href="{l["url"]}" target="_blank" rel="noopener">'
+            f'<span class="quicklink-icon">{l["icon"]}</span><span>{l["name"]}</span></a>'
+            for l in QUICK_LINKS
+        )
+        links_html = f'<div class="quicklinks">{tiles}</div>'
+
     cards_html = render_cards(articles)
 
     return f"""<!DOCTYPE html>
@@ -221,8 +238,11 @@ def build_html(articles, weather, github_activity):
     max-width: 840px;
     margin: 0 auto;
     padding: 32px 20px 60px;
-    background: var(--bg);
     color: var(--text);
+    background: var(--bg);
+    background-image: radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%),
+                       radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 40%);
+    background-attachment: fixed;
     transition: background 0.25s ease, color 0.25s ease;
   }}
   .topbar {{
@@ -243,7 +263,7 @@ def build_html(articles, weather, github_activity):
     display: flex; align-items: center; justify-content: center;
     transition: transform 0.15s ease;
   }}
-  .toggle-btn:hover {{ transform: scale(1.08); }}
+  .toggle-btn:hover {{ transform: scale(1.08) rotate(-8deg); }}
 
   .widgets {{
     display: grid;
@@ -257,7 +277,40 @@ def build_html(articles, weather, github_activity):
     border-radius: 14px;
     padding: 16px 18px;
     box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }}
+  .widget:hover {{
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }}
+
+  .quicklinks {{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }}
+  .quicklink {{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }}
+  .quicklink:hover {{
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: var(--accent);
+  }}
+  .quicklink-icon {{ font-size: 1.15em; }}
   .weather, .countdown {{ display: flex; align-items: center; gap: 12px; }}
   .weather-icon, .countdown-icon {{ font-size: 2em; }}
   .weather-temp, .countdown-days {{ font-size: 1.3em; font-weight: 600; }}
@@ -298,6 +351,12 @@ def build_html(articles, weather, github_activity):
     box-shadow: var(--shadow);
     opacity: 0;
     animation: fadeInUp 0.5s ease forwards;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }}
+  .card:hover {{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+    border-color: var(--accent);
   }}
   .card.hidden {{ display: none; }}
   @keyframes fadeInUp {{
@@ -329,6 +388,8 @@ def build_html(articles, weather, github_activity):
     {countdown_html}
     {github_html}
   </div>
+
+  {links_html}
 
   <div class="tabs">
     <button class="tab-btn active" data-filter="all">Alle</button>
