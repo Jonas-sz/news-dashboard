@@ -1,19 +1,26 @@
 import os
 import feedparser
 import requests
-from groq import Groq
-from datetime import datetime
+from datetime import datetime, date
 
-# RSS-Feeds (deutsche News, allgemein)
-FEEDS = {
+# --- Konfiguration ---
+
+FEEDS_ALLGEMEIN = {
     "Tagesschau": "https://www.tagesschau.de/xml/rss2/",
-    "Heise": "https://www.heise.de/rss/heise-atom.xml",
     "Zeit": "https://newsfeed.zeit.de/index",
 }
 
-# Standort für Wetter (Hannover) - Koordinaten bei Bedarf anpassen
+FEEDS_TECH = {
+    "Heise": "https://www.heise.de/rss/heise-atom.xml",
+    "Golem": "https://rss.golem.de/rss.php?feed=RSS2.0",
+}
+
 LAT, LON = 52.3759, 9.7320
 CITY_NAME = "Hannover"
+
+GITHUB_USERNAME = "Jonas-sz"
+
+EXAM_DATE = date(2027, 4, 27)
 
 WEATHER_CODES = {
     0: ("Klarer Himmel", "☀️"), 1: ("Überwiegend klar", "🌤️"), 2: ("Teilweise bewölkt", "⛅"),
@@ -25,7 +32,12 @@ WEATHER_CODES = {
     95: ("Gewitter", "⛈️"),
 }
 
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
+# Groq-Client nur initialisieren, wenn Key vorhanden (fürs lokale Testen ohne Key)
+GROQ_KEY = os.environ.get("GROQ_API_KEY")
+client = None
+if GROQ_KEY:
+    from groq import Groq
+    client = Groq(api_key=GROQ_KEY)
 
 
 def fetch_weather():
@@ -45,19 +57,57 @@ def fetch_weather():
         return None
 
 
+def fetch_github_activity():
+    try:
+        url = f"https://api.github.com/users/{GITHUB_USERNAME}/events/public"
+        r = requests.get(url, timeout=10, headers={"Accept": "application/vnd.github+json"})
+        events = r.json()
+        if not isinstance(events, list):
+            print(f"GitHub-Aktivität: unerwartete Antwort ({events})")
+            return []
+        activity = []
+        seen_repos = set()
+        for e in events:
+            repo = e.get("repo", {}).get("name", "")
+            etype = e.get("type", "")
+            if repo in seen_repos:
+                continue
+            label = {
+                "PushEvent": "Push zu",
+                "CreateEvent": "Erstellt:",
+                "PullRequestEvent": "Pull Request in",
+                "IssuesEvent": "Issue in",
+                "WatchEvent": "Star für",
+            }.get(etype, etype)
+            activity.append({"label": label, "repo": repo})
+            seen_repos.add(repo)
+            if len(activity) >= 5:
+                break
+        return activity
+    except Exception as e:
+        print(f"GitHub-Aktivität konnte nicht geladen werden: {e}")
+        return []
+
+
 def summarize(title, summary):
+    if not client:
+        return summary[:150]
     prompt = f"Fasse diese Nachricht in 2 kurzen Sätzen auf Deutsch zusammen:\n\nTitel: {title}\nText: {summary}"
-    response = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=150,
-    )
-    return response.choices[0].message.content.strip()
+    try:
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=150,
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"KI-Zusammenfassung fehlgeschlagen: {e}")
+        return summary[:150]
 
 
-def fetch_news():
+def fetch_news(feed_dict, category):
     articles = []
-    for source, url in FEEDS.items():
+    for source, url in feed_dict.items():
         feed = feedparser.parse(url)
         print(f"{source}: {len(feed.entries)} Einträge gefunden, bozo={feed.bozo}")
         for entry in feed.entries[:5]:
@@ -68,38 +118,84 @@ def fetch_news():
                 "title": entry.title,
                 "link": entry.link,
                 "summary": ai_summary,
+                "category": category,
             })
     return articles
 
 
-def build_html(articles, weather):
-    now = datetime.now().strftime("%d.%m.%Y %H:%M")
+def build_greeting():
+    hour = datetime.now().hour
+    if hour < 11:
+        return "Guten Morgen, Jonas ☀️"
+    elif hour < 18:
+        return "Hey Jonas 👋"
+    else:
+        return "Guten Abend, Jonas 🌙"
 
-    weather_html = ""
-    if weather:
-        weather_html = f"""
-        <div class="weather">
-          <span class="weather-icon">{weather['icon']}</span>
-          <span class="weather-temp">{weather['temp']}°C</span>
-          <span class="weather-desc">{weather['desc']} · {CITY_NAME}</span>
-        </div>"""
 
+def build_countdown():
+    days_left = (EXAM_DATE - date.today()).days
+    return days_left
+
+
+def render_cards(articles):
     cards_html = ""
     for i, a in enumerate(articles):
-        delay = i * 0.06
+        delay = i * 0.05
         cards_html += f"""
-        <div class="card" style="animation-delay:{delay}s">
+        <div class="card" data-category="{a['category']}" style="animation-delay:{delay}s">
           <div class="source">{a['source']}</div>
           <h3><a href="{a['link']}" target="_blank" rel="noopener">{a['title']}</a></h3>
           <p>{a['summary']}</p>
         </div>"""
+    return cards_html
+
+
+def build_html(articles, weather, github_activity):
+    now = datetime.now().strftime("%d.%m.%Y %H:%M")
+    greeting = build_greeting()
+    days_left = build_countdown()
+
+    weather_html = ""
+    if weather:
+        weather_html = f"""
+        <div class="widget weather">
+          <span class="weather-icon">{weather['icon']}</span>
+          <div>
+            <div class="weather-temp">{weather['temp']}°C</div>
+            <div class="widget-sub">{weather['desc']} · {CITY_NAME}</div>
+          </div>
+        </div>"""
+
+    countdown_html = f"""
+        <div class="widget countdown">
+          <span class="countdown-icon">⏳</span>
+          <div>
+            <div class="countdown-days">{days_left} Tage</div>
+            <div class="widget-sub">bis zur IHK-Prüfung</div>
+          </div>
+        </div>"""
+
+    github_html = ""
+    if github_activity:
+        items = "".join(
+            f'<li><span class="gh-label">{a["label"]}</span> {a["repo"]}</li>'
+            for a in github_activity
+        )
+        github_html = f"""
+        <div class="widget github-widget">
+          <div class="widget-title">🐙 GitHub-Aktivität</div>
+          <ul class="gh-list">{items}</ul>
+        </div>"""
+
+    cards_html = render_cards(articles)
 
     return f"""<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>News Dashboard</title>
+<title>Jonas' Startseite</title>
 <style>
   :root {{
     --bg: #f4f5f7;
@@ -122,7 +218,7 @@ def build_html(articles, weather):
   * {{ box-sizing: border-box; }}
   body {{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    max-width: 760px;
+    max-width: 840px;
     margin: 0 auto;
     padding: 32px 20px 60px;
     background: var(--bg);
@@ -133,9 +229,10 @@ def build_html(articles, weather):
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }}
   h1 {{ font-size: 1.6em; margin: 0; }}
+  .updated {{ color: var(--text-muted); font-size: 0.85em; margin: 4px 0 20px; }}
   .toggle-btn {{
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -147,21 +244,51 @@ def build_html(articles, weather):
     transition: transform 0.15s ease;
   }}
   .toggle-btn:hover {{ transform: scale(1.08); }}
-  .updated {{ color: var(--text-muted); font-size: 0.9em; margin: 4px 0 20px; }}
-  .weather {{
-    display: flex;
-    align-items: center;
-    gap: 10px;
+
+  .widgets {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }}
+  .widget {{
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 14px 18px;
-    margin-bottom: 24px;
+    padding: 16px 18px;
     box-shadow: var(--shadow);
   }}
-  .weather-icon {{ font-size: 1.8em; }}
-  .weather-temp {{ font-size: 1.3em; font-weight: 600; }}
-  .weather-desc {{ color: var(--text-muted); font-size: 0.9em; }}
+  .weather, .countdown {{ display: flex; align-items: center; gap: 12px; }}
+  .weather-icon, .countdown-icon {{ font-size: 2em; }}
+  .weather-temp, .countdown-days {{ font-size: 1.3em; font-weight: 600; }}
+  .widget-sub {{ color: var(--text-muted); font-size: 0.85em; }}
+  .widget-title {{ font-weight: 600; margin-bottom: 10px; font-size: 0.95em; }}
+  .gh-list {{ list-style: none; margin: 0; padding: 0; font-size: 0.88em; }}
+  .gh-list li {{ padding: 4px 0; color: var(--text-muted); border-top: 1px solid var(--border); }}
+  .gh-list li:first-child {{ border-top: none; }}
+  .gh-label {{ color: var(--accent); font-weight: 500; }}
+
+  .tabs {{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }}
+  .tab-btn {{
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 0.88em;
+    cursor: pointer;
+    color: var(--text-muted);
+  }}
+  .tab-btn.active {{
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }}
+
   .card {{
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -172,6 +299,7 @@ def build_html(articles, weather):
     opacity: 0;
     animation: fadeInUp 0.5s ease forwards;
   }}
+  .card.hidden {{ display: none; }}
   @keyframes fadeInUp {{
     from {{ opacity: 0; transform: translateY(8px); }}
     to {{ opacity: 1; transform: translateY(0); }}
@@ -191,11 +319,23 @@ def build_html(articles, weather):
 </head>
 <body data-theme="light">
   <div class="topbar">
-    <h1>📰 News Dashboard</h1>
+    <h1>{greeting}</h1>
     <button class="toggle-btn" id="themeToggle" aria-label="Dark Mode umschalten">🌙</button>
   </div>
   <p class="updated">Zuletzt aktualisiert: {now} Uhr</p>
-  {weather_html}
+
+  <div class="widgets">
+    {weather_html}
+    {countdown_html}
+    {github_html}
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-filter="all">Alle</button>
+    <button class="tab-btn" data-filter="allgemein">Allgemein</button>
+    <button class="tab-btn" data-filter="tech">Tech &amp; Cloud</button>
+  </div>
+
   {cards_html}
 
 <script>
@@ -212,6 +352,23 @@ def build_html(articles, weather):
     btn.textContent = isDark ? '🌙' : '☀️';
     localStorage.setItem('theme', isDark ? 'light' : 'dark');
   }});
+
+  const tabs = document.querySelectorAll('.tab-btn');
+  const cards = document.querySelectorAll('.card');
+  tabs.forEach(tab => {{
+    tab.addEventListener('click', () => {{
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.dataset.filter;
+      cards.forEach(card => {{
+        if (filter === 'all' || card.dataset.category === filter) {{
+          card.classList.remove('hidden');
+        }} else {{
+          card.classList.add('hidden');
+        }}
+      }});
+    }});
+  }});
 </script>
 </body>
 </html>"""
@@ -219,8 +376,9 @@ def build_html(articles, weather):
 
 if __name__ == "__main__":
     weather = fetch_weather()
-    articles = fetch_news()
-    html = build_html(articles, weather)
+    github_activity = fetch_github_activity()
+    articles = fetch_news(FEEDS_ALLGEMEIN, "allgemein") + fetch_news(FEEDS_TECH, "tech")
+    html = build_html(articles, weather, github_activity)
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Fertig! {len(articles)} Artikel geschrieben.")
